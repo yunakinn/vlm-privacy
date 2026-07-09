@@ -1,0 +1,25 @@
+# Python virtual environment
+.venv/
+
+# Python cache
+__pycache__/
+*.py[cod]
+
+# macOS
+.DS_Store
+
+# Environment variables
+.env
+
+# Model checkpoints
+checkpoints/
+*.bin
+*.safetensors
+
+# Generated experiment results
+results/*
+!results/.gitkeep
+
+# Private/raw images
+data/images/*
+!data/images/.gitkeep
