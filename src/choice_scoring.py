@@ -11,17 +11,14 @@ from .model_loader import ModelBundle, prepare_inputs
 
 def build_choice_scoring_prompt(
     question: str,
-    choices: list[str],
+    ordered_choices: list[str],
 ) -> str:
-    if not choices:
-        raise ValueError("Choice scoring requires at least one choice.")
-
-    if len(choices) > len(ascii_uppercase):
-        raise ValueError("Choice scoring supports at most 26 choices.")
+    if not ordered_choices:
+        raise ValueError("Choice scoring requires choices.")
 
     formatted_choices = "\n".join(
         f"{ascii_uppercase[index]}. {choice}"
-        for index, choice in enumerate(choices)
+        for index, choice in enumerate(ordered_choices)
     )
 
     return (
@@ -30,20 +27,30 @@ def build_choice_scoring_prompt(
         "If there is not enough evidence, choose unknown.\n"
         f"Question: {question}\n"
         f"Options:\n{formatted_choices}\n"
+        "Choose exactly one option. "
         "Return only the single option letter.\n"
         "ASSISTANT:\n"
     )
 
 
-def _get_choice_token_ids(
+def _cyclic_permutations(
+    choices: list[str],
+) -> list[list[str]]:
+    return [
+        choices[shift:] + choices[:shift]
+        for shift in range(len(choices))
+    ]
+
+
+def _get_letter_token_ids(
     bundle: ModelBundle,
     prompt: str,
     num_choices: int,
-) -> tuple[list[str], list[int]]:
+) -> list[int]:
     tokenizer = bundle.processor.tokenizer
     letters = list(ascii_uppercase[:num_choices])
 
-    base_ids = tokenizer(
+    prompt_ids = tokenizer(
         prompt,
         add_special_tokens=True,
     ).input_ids
@@ -56,70 +63,91 @@ def _get_choice_token_ids(
             add_special_tokens=True,
         ).input_ids
 
-        # 각 선택지 글자가 정확히 하나의 다음 토큰인지 확인한다.
-        if full_ids[: len(base_ids)] != base_ids:
+        if full_ids[:len(prompt_ids)] != prompt_ids:
             raise RuntimeError(
-                f"Prompt tokenization changed while appending choice {letter}."
+                f"Prompt tokenization changed for letter {letter}."
             )
 
-        continuation = full_ids[len(base_ids) :]
+        continuation = full_ids[len(prompt_ids):]
 
         if len(continuation) != 1:
             raise RuntimeError(
-                f"Choice letter {letter} is not one token: {continuation}"
+                f"Letter {letter} is not one token: {continuation}"
             )
 
         token_ids.append(continuation[0])
 
     if len(set(token_ids)) != len(token_ids):
-        raise RuntimeError("Choice letters do not have unique token IDs.")
+        raise RuntimeError(
+            "Option letters do not have unique token IDs."
+        )
 
-    return letters, token_ids
+    return token_ids
 
 
-def _normalize_choice_logits(
+def _get_letter_probabilities(
     bundle: ModelBundle,
     prompt: str,
-    next_token_logits: torch.Tensor,
-    choices: list[str],
-) -> dict[str, Any]:
-    letters, token_ids = _get_choice_token_ids(
-        bundle,
-        prompt,
-        len(choices),
+    logits: torch.Tensor,
+    num_choices: int,
+) -> torch.Tensor:
+    token_ids = _get_letter_token_ids(
+        bundle=bundle,
+        prompt=prompt,
+        num_choices=num_choices,
     )
 
-    if next_token_logits.dim() == 2:
-        next_token_logits = next_token_logits[0]
+    if logits.dim() == 2:
+        logits = logits[0]
 
-    token_index = torch.tensor(
+    indices = torch.tensor(
         token_ids,
         dtype=torch.long,
-        device=next_token_logits.device,
+        device=logits.device,
     )
 
-    allowed_logits = next_token_logits.float().index_select(
+    selected_logits = logits.float().index_select(
         dim=-1,
-        index=token_index,
+        index=indices,
     )
 
-    probabilities = torch.softmax(
-        allowed_logits,
-        dim=-1,
-    )
+    return torch.softmax(selected_logits, dim=-1)
 
-    predicted_index = int(torch.argmax(probabilities).item())
+
+def _format_result(
+    choices: list[str],
+    probability_sums: dict[str, float],
+    num_permutations: int,
+) -> dict[str, Any]:
+    probabilities = {
+        choice: probability_sums[choice] / num_permutations
+        for choice in choices
+    }
+
+    total = sum(probabilities.values())
+
+    if total <= 0:
+        raise RuntimeError(
+            "Aggregated probabilities have zero total."
+        )
+
+    probabilities = {
+        choice: probability / total
+        for choice, probability in probabilities.items()
+    }
+
+    prediction = max(
+        choices,
+        key=lambda choice: probabilities[choice],
+    )
 
     return {
-        "choice_prediction": choices[predicted_index],
-        "choice_letter": letters[predicted_index],
-        "choice_confidence": float(
-            probabilities[predicted_index].detach().cpu()
-        ),
-        "choice_probabilities": {
-            choice: float(probability.detach().cpu())
-            for choice, probability in zip(choices, probabilities)
-        },
+        "choice_prediction": prediction,
+        "choice_confidence": probabilities[prediction],
+        "choice_probabilities": probabilities,
+        "choice_scoring_method":
+            "balanced_cyclic_permutation_letter_probability",
+        "choice_num_permutations": num_permutations,
     }
 
 
@@ -130,17 +158,51 @@ def score_baseline_choices(
     question: str,
     choices: list[str],
 ) -> dict[str, Any]:
-    prompt = build_choice_scoring_prompt(question, choices)
-    inputs = prepare_inputs(bundle, image, prompt)
+    if not choices:
+        raise ValueError(
+            "Baseline choice scoring requires choices."
+        )
 
-    outputs = bundle.model(**inputs)
-    next_token_logits = outputs.logits[:, -1, :]
+    probability_sums = {
+        choice: 0.0
+        for choice in choices
+    }
 
-    return _normalize_choice_logits(
-        bundle,
-        prompt,
-        next_token_logits,
-        choices,
+    permutations = _cyclic_permutations(choices)
+
+    for ordered_choices in permutations:
+        prompt = build_choice_scoring_prompt(
+            question=question,
+            ordered_choices=ordered_choices,
+        )
+
+        inputs = prepare_inputs(
+            bundle=bundle,
+            image=image,
+            prompt=prompt,
+        )
+
+        outputs = bundle.model(**inputs)
+        logits = outputs.logits[:, -1, :]
+
+        letter_probabilities = _get_letter_probabilities(
+            bundle=bundle,
+            prompt=prompt,
+            logits=logits,
+            num_choices=len(ordered_choices),
+        )
+
+        for position, choice in enumerate(ordered_choices):
+            probability_sums[choice] += float(
+                letter_probabilities[position]
+                .detach()
+                .cpu()
+            )
+
+    return _format_result(
+        choices=choices,
+        probability_sums=probability_sums,
+        num_permutations=len(permutations),
     )
 
 
@@ -153,33 +215,65 @@ def score_vcd_choices(
     choices: list[str],
     alpha: float,
 ) -> dict[str, Any]:
-    prompt = build_choice_scoring_prompt(question, choices)
+    if not choices:
+        raise ValueError(
+            "VCD choice scoring requires choices."
+        )
 
-    clean_inputs = prepare_inputs(
-        bundle,
-        clean_image,
-        prompt,
-    )
-    distorted_inputs = prepare_inputs(
-        bundle,
-        distorted_image,
-        prompt,
-    )
+    probability_sums = {
+        choice: 0.0
+        for choice in choices
+    }
 
-    clean_outputs = bundle.model(**clean_inputs)
-    distorted_outputs = bundle.model(**distorted_inputs)
+    permutations = _cyclic_permutations(choices)
 
-    clean_logits = clean_outputs.logits[:, -1, :].float()
-    distorted_logits = distorted_outputs.logits[:, -1, :].float()
+    for ordered_choices in permutations:
+        prompt = build_choice_scoring_prompt(
+            question=question,
+            ordered_choices=ordered_choices,
+        )
 
-    vcd_logits = (
-        (1.0 + alpha) * clean_logits
-        - alpha * distorted_logits
-    )
+        clean_inputs = prepare_inputs(
+            bundle=bundle,
+            image=clean_image,
+            prompt=prompt,
+        )
 
-    return _normalize_choice_logits(
-        bundle,
-        prompt,
-        vcd_logits,
-        choices,
+        distorted_inputs = prepare_inputs(
+            bundle=bundle,
+            image=distorted_image,
+            prompt=prompt,
+        )
+
+        clean_outputs = bundle.model(**clean_inputs)
+        distorted_outputs = bundle.model(**distorted_inputs)
+
+        clean_logits = clean_outputs.logits[:, -1, :].float()
+        distorted_logits = (
+            distorted_outputs.logits[:, -1, :].float()
+        )
+
+        vcd_logits = (
+            (1.0 + alpha) * clean_logits
+            - alpha * distorted_logits
+        )
+
+        letter_probabilities = _get_letter_probabilities(
+            bundle=bundle,
+            prompt=prompt,
+            logits=vcd_logits,
+            num_choices=len(ordered_choices),
+        )
+
+        for position, choice in enumerate(ordered_choices):
+            probability_sums[choice] += float(
+                letter_probabilities[position]
+                .detach()
+                .cpu()
+            )
+
+    return _format_result(
+        choices=choices,
+        probability_sums=probability_sums,
+        num_permutations=len(permutations),
     )
