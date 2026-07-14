@@ -6,7 +6,11 @@ from typing import Any
 import torch
 from PIL import Image
 
-from .model_loader import ModelBundle, prepare_inputs
+from .model_loader import (
+    ModelBundle,
+    build_evidence_instruction,
+    prepare_inputs,
+)
 
 
 def build_choice_scoring_prompt(
@@ -23,8 +27,7 @@ def build_choice_scoring_prompt(
 
     return (
         "USER: <image>\n"
-        "Use only visible evidence in the image. "
-        "If there is not enough evidence, choose unknown.\n"
+        f"{build_evidence_instruction(ordered_choices)}\n"
         f"Question: {question}\n"
         f"Options:\n{formatted_choices}\n"
         "Choose exactly one option. "

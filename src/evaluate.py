@@ -7,6 +7,15 @@ from pathlib import Path
 from typing import Any, Callable
 
 
+def normalize_text(text: Any) -> str:
+    text = "" if text is None else str(text)
+    text = text.strip().lower()
+    text = re.sub(r"^answer:\s*", "", text)
+    text = re.sub(r"confidence:\s*[0-9.]+", "", text)
+    text = re.sub(r"[^a-z0-9]+", " ", text)
+    return " ".join(text.split())
+
+
 def load_annotations(path: str | Path) -> list[dict[str, Any]]:
     with Path(path).open("r", encoding="utf-8") as file:
         data = json.load(file)
@@ -17,8 +26,18 @@ def load_annotations(path: str | Path) -> list[dict[str, Any]]:
     return data
 
 
-def validate_example(example: dict[str, Any], index: int) -> None:
-    required = ["image", "question"]
+def validate_example(
+    example: dict[str, Any],
+    index: int,
+    image_dir: str | Path,
+) -> None:
+    required = [
+        "id",
+        "image",
+        "question",
+        "choices",
+        "answer",
+    ]
     missing = [key for key in required if key not in example]
 
     if missing:
@@ -26,14 +45,72 @@ def validate_example(example: dict[str, Any], index: int) -> None:
             f"Example {index} is missing required keys: {missing}"
         )
 
+    if not str(example["id"]).strip():
+        raise ValueError(f"Example {index} has an empty id.")
 
-def normalize_text(text: Any) -> str:
-    text = "" if text is None else str(text)
-    text = text.strip().lower()
-    text = re.sub(r"^answer:\s*", "", text)
-    text = re.sub(r"confidence:\s*[0-9.]+", "", text)
-    text = re.sub(r"[^a-z0-9]+", " ", text)
-    return " ".join(text.split())
+    if not isinstance(example["image"], str) or not example["image"].strip():
+        raise ValueError(f"Example {index} has an invalid image path.")
+
+    if not isinstance(example["question"], str) or not example["question"].strip():
+        raise ValueError(f"Example {index} has an invalid question.")
+
+    choices = example["choices"]
+    if not isinstance(choices, list) or len(choices) < 2:
+        raise ValueError(
+            f"Example {index} must have at least two choices."
+        )
+
+    if len(choices) > 26:
+        raise ValueError(
+            f"Example {index} has more than 26 choices."
+        )
+
+    normalized_choices = [normalize_text(choice) for choice in choices]
+
+    if any(not choice for choice in normalized_choices):
+        raise ValueError(
+            f"Example {index} contains an empty choice."
+        )
+
+    if len(set(normalized_choices)) != len(normalized_choices):
+        raise ValueError(
+            f"Example {index} contains duplicate choices."
+        )
+
+    normalized_answer = normalize_text(example["answer"])
+    if normalized_answer not in normalized_choices:
+        raise ValueError(
+            f"Example {index} answer is not present in choices: "
+            f"{example['answer']!r}"
+        )
+
+    image_path = Path(example["image"])
+    if not image_path.is_absolute():
+        image_path = Path(image_dir) / image_path
+
+    if not image_path.is_file():
+        raise FileNotFoundError(
+            f"Example {index} image does not exist: {image_path}"
+        )
+
+
+def validate_examples(
+    examples: list[dict[str, Any]],
+    image_dir: str | Path,
+) -> None:
+    seen_ids: dict[str, int] = {}
+
+    for index, example in enumerate(examples):
+        validate_example(example, index, image_dir)
+
+        example_id = str(example["id"])
+        if example_id in seen_ids:
+            raise ValueError(
+                f"Duplicate id {example_id!r} at examples "
+                f"{seen_ids[example_id]} and {index}."
+            )
+
+        seen_ids[example_id] = index
 
 
 def extract_choice(
@@ -618,6 +695,51 @@ def summarize_predictions(
         )
 
     return summary
+
+
+def read_jsonl(path: str | Path) -> list[dict[str, Any]]:
+    jsonl_path = Path(path)
+
+    if not jsonl_path.exists():
+        return []
+
+    records: list[dict[str, Any]] = []
+
+    with jsonl_path.open("r", encoding="utf-8") as file:
+        for line_number, line in enumerate(file, start=1):
+            if not line.strip():
+                continue
+
+            try:
+                record = json.loads(line)
+            except json.JSONDecodeError as error:
+                raise ValueError(
+                    f"Invalid JSONL at {jsonl_path}:{line_number}"
+                ) from error
+
+            if not isinstance(record, dict):
+                raise ValueError(
+                    f"JSONL record at {jsonl_path}:{line_number} "
+                    "must be an object."
+                )
+
+            records.append(record)
+
+    return records
+
+
+def append_jsonl(
+    path: str | Path,
+    record: dict[str, Any],
+) -> None:
+    jsonl_path = Path(path)
+    jsonl_path.parent.mkdir(parents=True, exist_ok=True)
+
+    with jsonl_path.open("a", encoding="utf-8") as file:
+        file.write(
+            json.dumps(record, ensure_ascii=False) + "\n"
+        )
+        file.flush()
 
 
 def write_jsonl(

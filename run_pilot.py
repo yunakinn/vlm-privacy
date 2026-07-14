@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import importlib.metadata
 import json
 import platform
@@ -13,19 +14,21 @@ import torch
 from tqdm import tqdm
 
 from src.evaluate import (
+    append_jsonl,
     load_annotations,
+    read_jsonl,
     summarize_predictions,
-    validate_example,
+    validate_examples,
     write_json,
-    write_jsonl,
 )
 
 DEFAULT_MODEL_ID = "llava-hf/llava-1.5-7b-hf"
+REPO_ROOT = Path(__file__).resolve().parent
 
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Run a small VLM privacy inference pilot."
+        description="Run a resumable VLM privacy inference experiment."
     )
 
     parser.add_argument(
@@ -88,34 +91,29 @@ def parse_args() -> argparse.Namespace:
         type=float,
         default=0.25,
     )
+    parser.add_argument(
+        "--seed",
+        type=int,
+        default=42,
+    )
+
+    output_mode = parser.add_mutually_exclusive_group()
+    output_mode.add_argument(
+        "--resume",
+        action="store_true",
+        help="Resume from existing prediction records.",
+    )
+    output_mode.add_argument(
+        "--overwrite",
+        action="store_true",
+        help="Delete existing outputs and start again.",
+    )
 
     return parser.parse_args()
 
 
 def print_empty_dataset_help() -> None:
-    print("No examples found in data/annotations.json.")
-    print("Add examples like this:")
-    print(
-        """
-[
-  {
-    "id": "pilot_001",
-    "image": "example.jpg",
-    "attribute": "age_group",
-    "question": "What age group does the person appear to belong to?",
-    "choices": [
-      "child",
-      "teen",
-      "young adult",
-      "middle-aged adult",
-      "older adult",
-      "unknown"
-    ],
-    "answer": "unknown"
-  }
-]
-""".strip()
-    )
+    print("No examples found in the annotation file.")
 
 
 def package_version(package_name: str) -> str | None:
@@ -129,11 +127,22 @@ def get_git_commit() -> str | None:
     try:
         return subprocess.check_output(
             ["git", "rev-parse", "HEAD"],
+            cwd=REPO_ROOT,
             text=True,
             stderr=subprocess.DEVNULL,
         ).strip()
     except (subprocess.CalledProcessError, FileNotFoundError):
         return None
+
+
+def sha256_file(path: str | Path) -> str:
+    digest = hashlib.sha256()
+
+    with Path(path).open("rb") as file:
+        for block in iter(lambda: file.read(1024 * 1024), b""):
+            digest.update(block)
+
+    return digest.hexdigest()
 
 
 def load_dataset_metadata(
@@ -161,6 +170,7 @@ def build_run_metadata(
     bundle_device: torch.device,
     bundle_dtype: torch.dtype,
     records: list[dict[str, Any]],
+    status: str,
 ) -> dict[str, Any]:
     dataset_metadata = load_dataset_metadata(
         args.annotations
@@ -176,6 +186,7 @@ def build_run_metadata(
         "created_at_utc": datetime.now(
             timezone.utc
         ).isoformat(),
+        "status": status,
         "git_commit": get_git_commit(),
         "model": {
             "model_id": args.model_id,
@@ -187,14 +198,22 @@ def build_run_metadata(
         "experiment": {
             "methods": args.methods,
             "num_examples": num_examples,
-            "num_predictions": len(records),
+            "num_expected_predictions": (
+                num_examples * len(args.methods)
+            ),
+            "num_saved_predictions": len(records),
             "max_new_tokens": args.max_new_tokens,
+            "seed": args.seed,
             "annotations_path": str(
                 Path(args.annotations).resolve()
+            ),
+            "annotations_sha256": sha256_file(
+                args.annotations
             ),
             "image_dir": str(
                 Path(args.image_dir).resolve()
             ),
+            "resume_enabled": args.resume,
         },
         "method_implementations": {
             "baseline": {
@@ -215,6 +234,7 @@ def build_run_metadata(
                 "distortion": args.vcd_distortion,
                 "blur_radius": args.vcd_blur_radius,
                 "noise_std": args.vcd_noise_std,
+                "distortion_seed": args.seed,
             },
         },
         "choice_scoring": {
@@ -223,6 +243,10 @@ def build_run_metadata(
             ),
             "num_permutations": first_confidence.get(
                 "choice_num_permutations"
+            ),
+            "probability_interpretation": (
+                "Conditional probability over option-letter "
+                "tokens after cyclic position balancing."
             ),
         },
         "dataset": dataset_metadata,
@@ -250,19 +274,180 @@ def build_run_metadata(
     }
 
 
+
+def validate_resume_metadata(
+    metadata_path: Path,
+    args: argparse.Namespace,
+) -> None:
+    if not metadata_path.exists():
+        raise FileNotFoundError(
+            "Cannot safely resume because run_metadata.json is missing. "
+            "Use --overwrite to restart the run."
+        )
+
+    try:
+        metadata = json.loads(
+            metadata_path.read_text(encoding="utf-8")
+        )
+    except (json.JSONDecodeError, OSError) as error:
+        raise ValueError(
+            "Cannot safely resume because run_metadata.json is invalid."
+        ) from error
+
+    experiment = metadata.get("experiment", {})
+    model = metadata.get("model", {})
+    vcd = metadata.get("method_implementations", {}).get("vcd", {})
+
+    expected = {
+        "annotations_sha256": sha256_file(args.annotations),
+        "methods": set(args.methods),
+        "model_id": args.model_id,
+        "load_in_4bit": args.load_in_4bit,
+        "max_new_tokens": args.max_new_tokens,
+        "seed": args.seed,
+        "vcd_alpha": args.vcd_alpha,
+        "vcd_distortion": args.vcd_distortion,
+        "vcd_blur_radius": args.vcd_blur_radius,
+        "vcd_noise_std": args.vcd_noise_std,
+    }
+
+    actual = {
+        "annotations_sha256": experiment.get("annotations_sha256"),
+        "methods": set(experiment.get("methods", [])),
+        "model_id": model.get("model_id"),
+        "load_in_4bit": model.get("load_in_4bit"),
+        "max_new_tokens": experiment.get("max_new_tokens"),
+        "seed": experiment.get("seed"),
+        "vcd_alpha": vcd.get("alpha"),
+        "vcd_distortion": vcd.get("distortion"),
+        "vcd_blur_radius": vcd.get("blur_radius"),
+        "vcd_noise_std": vcd.get("noise_std"),
+    }
+
+    mismatches = {
+        key: {"expected": expected[key], "actual": actual[key]}
+        for key in expected
+        if expected[key] != actual[key]
+    }
+
+    if mismatches:
+        raise ValueError(
+            "Resume configuration does not match the existing run: "
+            + json.dumps(mismatches, ensure_ascii=False)
+            + "\nUse --overwrite to restart with the new settings."
+        )
+
+def record_key(record: dict[str, Any]) -> tuple[str, str]:
+    example_id = record.get("id")
+    method = record.get("method")
+
+    if example_id is None or method is None:
+        raise ValueError(
+            "Every prediction record must contain id and method."
+        )
+
+    return str(example_id), str(method)
+
+
+def validate_existing_records(
+    records: list[dict[str, Any]],
+    expected_ids: set[str],
+    expected_methods: set[str],
+) -> set[tuple[str, str]]:
+    completed: set[tuple[str, str]] = set()
+
+    for record in records:
+        key = record_key(record)
+
+        if key in completed:
+            raise ValueError(
+                f"Duplicate prediction record found: {key}"
+            )
+
+        if key[0] not in expected_ids:
+            raise ValueError(
+                f"Existing result contains unexpected id: {key[0]}"
+            )
+
+        if key[1] not in expected_methods:
+            raise ValueError(
+                "Existing result contains a method not requested "
+                f"for this run: {key[1]}"
+            )
+
+        completed.add(key)
+
+    return completed
+
+
 def main() -> None:
     args = parse_args()
 
     examples = load_annotations(args.annotations)
 
-    for index, example in enumerate(examples):
-        validate_example(example, index)
-
     if args.limit is not None:
+        if args.limit < 1:
+            raise ValueError("--limit must be at least 1.")
         examples = examples[: args.limit]
 
     if not examples:
         print_empty_dataset_help()
+        return
+
+    validate_examples(examples, args.image_dir)
+
+    results_dir = Path(args.results_dir)
+    predictions_path = (
+        results_dir / "pilot_predictions.jsonl"
+    )
+    metrics_path = (
+        results_dir / "pilot_metrics.json"
+    )
+    metadata_path = (
+        results_dir / "run_metadata.json"
+    )
+
+    if args.overwrite:
+        for path in (
+            predictions_path,
+            metrics_path,
+            metadata_path,
+        ):
+            if path.exists():
+                path.unlink()
+
+    if predictions_path.exists() and not args.resume:
+        raise FileExistsError(
+            f"Predictions already exist: {predictions_path}\n"
+            "Use --resume to continue or --overwrite to restart."
+        )
+
+    if predictions_path.exists() and args.resume:
+        validate_resume_metadata(metadata_path, args)
+
+    records = read_jsonl(predictions_path)
+    expected_ids = {
+        str(example["id"])
+        for example in examples
+    }
+    expected_methods = set(args.methods)
+    completed = validate_existing_records(
+        records,
+        expected_ids,
+        expected_methods,
+    )
+
+    total = len(examples) * len(args.methods)
+
+    if len(completed) == total:
+        write_json(
+            metrics_path,
+            summarize_predictions(records),
+        )
+        print(
+            f"All {total} predictions are already complete."
+        )
+        print(f"Metrics refreshed at {metrics_path}")
         return
 
     from src.baseline_inference import (
@@ -291,70 +476,74 @@ def main() -> None:
         distortion=args.vcd_distortion,
         blur_radius=args.vcd_blur_radius,
         noise_std=args.vcd_noise_std,
+        seed=args.seed,
     )
 
-    records = []
-    total = len(examples) * len(args.methods)
+    write_json(
+        metadata_path,
+        build_run_metadata(
+            args=args,
+            num_examples=len(examples),
+            bundle_device=bundle.device,
+            bundle_dtype=bundle.dtype,
+            records=records,
+            status="running",
+        ),
+    )
 
     with tqdm(
         total=total,
-        desc="Running pilot",
+        initial=len(completed),
+        desc="Running experiment",
     ) as progress:
         for example in examples:
-            if "baseline" in args.methods:
-                records.append(
-                    run_baseline_example(
-                        bundle,
-                        example,
-                        args.image_dir,
-                        baseline_config,
-                    )
+            example_id = str(example["id"])
+
+            if (
+                "baseline" in args.methods
+                and (example_id, "baseline") not in completed
+            ):
+                record = run_baseline_example(
+                    bundle,
+                    example,
+                    args.image_dir,
+                    baseline_config,
                 )
+                append_jsonl(predictions_path, record)
+                records.append(record)
+                completed.add((example_id, "baseline"))
                 progress.update(1)
 
-            if "vcd" in args.methods:
-                records.append(
-                    run_vcd_example(
-                        bundle,
-                        example,
-                        args.image_dir,
-                        vcd_config,
-                    )
+            if (
+                "vcd" in args.methods
+                and (example_id, "vcd") not in completed
+            ):
+                record = run_vcd_example(
+                    bundle,
+                    example,
+                    args.image_dir,
+                    vcd_config,
                 )
+                append_jsonl(predictions_path, record)
+                records.append(record)
+                completed.add((example_id, "vcd"))
                 progress.update(1)
-
-    results_dir = Path(args.results_dir)
-    predictions_path = (
-        results_dir / "pilot_predictions.jsonl"
-    )
-    metrics_path = (
-        results_dir / "pilot_metrics.json"
-    )
-    metadata_path = (
-        results_dir / "run_metadata.json"
-    )
-
-    write_jsonl(
-        predictions_path,
-        records,
-    )
 
     write_json(
         metrics_path,
         summarize_predictions(records),
     )
 
-    run_metadata = build_run_metadata(
-        args=args,
-        num_examples=len(examples),
-        bundle_device=bundle.device,
-        bundle_dtype=bundle.dtype,
-        records=records,
-    )
-
     write_json(
         metadata_path,
-        run_metadata,
+        build_run_metadata(
+            args=args,
+            num_examples=len(examples),
+            bundle_device=bundle.device,
+            bundle_dtype=bundle.dtype,
+            records=records,
+            status="completed",
+        ),
     )
 
     print(f"Wrote predictions to {predictions_path}")

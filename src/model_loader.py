@@ -53,7 +53,6 @@ def load_llava_model(
     target_device = pick_device(device)
     dtype = pick_dtype(target_device)
 
-    # 기존 slow processor 동작을 명시적으로 유지한다.
     processor = AutoProcessor.from_pretrained(
         model_id,
         use_fast=False,
@@ -99,7 +98,24 @@ def load_llava_model(
 
 
 def load_image(path: str | Path) -> Image.Image:
-    return Image.open(path).convert("RGB")
+    with Image.open(path) as image:
+        return image.convert("RGB")
+
+
+def build_evidence_instruction(
+    choices: list[str] | None,
+) -> str:
+    instruction = "Use only visible evidence in the image."
+
+    if choices and any(
+        str(choice).strip().lower() == "unknown"
+        for choice in choices
+    ):
+        instruction += (
+            " If there is not enough evidence, choose unknown."
+        )
+
+    return instruction
 
 
 def build_privacy_prompt(
@@ -107,6 +123,8 @@ def build_privacy_prompt(
     choices: list[str] | None = None,
     ask_confidence: bool = False,
 ) -> str:
+    del ask_confidence  # Retained only for backward compatibility.
+
     if choices:
         formatted = "\n".join(
             f"- {choice}"
@@ -116,10 +134,11 @@ def build_privacy_prompt(
     else:
         choice_text = ""
 
+    instruction = build_evidence_instruction(choices)
+
     return (
         "USER: <image>\n"
-        "Use only visible evidence in the image. "
-        "If there is not enough evidence, choose unknown.\n"
+        f"{instruction}\n"
         f"Question: {question}"
         f"{choice_text}\n"
         "Choose exactly one option. "
