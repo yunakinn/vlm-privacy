@@ -6,6 +6,7 @@ from typing import Any
 
 import torch
 
+from .choice_scoring import score_baseline_choices
 from .model_loader import (
     ModelBundle,
     build_privacy_prompt,
@@ -116,6 +117,17 @@ def run_baseline_example(
         outputs.scores,
         generated_ids,
     )
+
+    choices = example.get("choices")
+    if choices:
+        confidence.update(
+            score_baseline_choices(
+                bundle=bundle,
+                image=image,
+                question=example["question"],
+                choices=choices,
+            )
+        )
 
     print("RAW MODEL OUTPUT:", repr(raw_output))
     print("PARSED PREDICTION:", prediction)

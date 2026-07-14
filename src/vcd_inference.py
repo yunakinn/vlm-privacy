@@ -8,6 +8,7 @@ import torch
 from PIL import Image, ImageFilter
 
 from .baseline_inference import _parse_prediction
+from .choice_scoring import score_vcd_choices
 from .model_loader import ModelBundle, build_privacy_prompt, decode_generated, load_image, prepare_inputs
 
 
@@ -120,6 +121,19 @@ def run_vcd_example(
         "vcd_alpha": config.alpha,
         "vcd_distortion": config.distortion,
     }
+
+    choices = example.get("choices")
+    if choices:
+        confidence.update(
+            score_vcd_choices(
+                bundle=bundle,
+                clean_image=clean_image,
+                distorted_image=distorted_image,
+                question=example["question"],
+                choices=choices,
+                alpha=config.alpha,
+            )
+        )
 
     return {
         "id": example.get("id"),
