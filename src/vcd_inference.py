@@ -7,6 +7,7 @@ from typing import Any
 import torch
 from PIL import Image, ImageFilter
 
+from .baseline_inference import _parse_prediction
 from .model_loader import ModelBundle, build_privacy_prompt, decode_generated, load_image, prepare_inputs
 
 
@@ -111,7 +112,8 @@ def run_vcd_example(
     else:
         generated_ids = torch.empty(0, dtype=torch.long, device=bundle.device)
 
-    text = decode_generated(bundle, generated_ids)
+    raw_output = decode_generated(bundle, generated_ids)
+    prediction = _parse_prediction(raw_output, example.get("choices"))
     confidence = {
         "avg_token_prob": sum(token_probs) / len(token_probs) if token_probs else 0.0,
         "min_token_prob": min(token_probs) if token_probs else 0.0,
@@ -127,6 +129,7 @@ def run_vcd_example(
         "attribute": example.get("attribute"),
         "choices": example.get("choices"),
         "answer": example.get("answer"),
-        "prediction": text,
+        "prediction": prediction,
+        "raw_output": raw_output,
         "confidence": confidence,
     }
