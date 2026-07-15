@@ -273,9 +273,10 @@ def score_vcd_choices(
         )
 
         clean_pixel_values = clean_inputs["pixel_values"]
+        # 같은 이미지의 선택지 순서만 변경하므로 동일한 noise 사용
         generator = make_generator(
             clean_pixel_values,
-            seed + permutation_index,
+            seed,
         )
         distorted_pixel_values = add_diffusion_noise(
             clean_pixel_values,
