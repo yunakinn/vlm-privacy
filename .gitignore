@@ -31,3 +31,7 @@ run_pilot.py.simplified_backup
 *.before_*
 *.backup
 *.bak
+.pytest_cache/
+*.jsonl
+*.pt
+*.pth
