@@ -6,10 +6,11 @@ from typing import Any
 import torch
 from PIL import Image
 
-from .model_loader import (
-    ModelBundle,
-    build_evidence_instruction,
-    prepare_inputs,
+from .model_loader import ModelBundle, prepare_inputs
+from .vcd_core import (
+    add_diffusion_noise,
+    make_generator,
+    official_vcd_logits,
 )
 
 
@@ -25,9 +26,20 @@ def build_choice_scoring_prompt(
         for index, choice in enumerate(ordered_choices)
     )
 
+    has_unknown = any(
+        choice.strip().lower() == "unknown"
+        for choice in ordered_choices
+    )
+    unknown_instruction = (
+        "If there is not enough evidence, choose unknown.\n"
+        if has_unknown
+        else ""
+    )
+
     return (
         "USER: <image>\n"
-        f"{build_evidence_instruction(ordered_choices)}\n"
+        "Use only visible evidence in the image.\n"
+        f"{unknown_instruction}"
         f"Question: {question}\n"
         f"Options:\n{formatted_choices}\n"
         "Choose exactly one option. "
@@ -75,7 +87,8 @@ def _get_letter_token_ids(
 
         if len(continuation) != 1:
             raise RuntimeError(
-                f"Letter {letter} is not one token: {continuation}"
+                f"Letter {letter} is not one token: "
+                f"{continuation}"
             )
 
         token_ids.append(continuation[0])
@@ -108,12 +121,18 @@ def _get_letter_probabilities(
         dtype=torch.long,
         device=logits.device,
     )
-
     selected_logits = logits.float().index_select(
         dim=-1,
         index=indices,
     )
 
+    if not torch.isfinite(selected_logits).any():
+        raise RuntimeError(
+            "Official VCD APC removed every option-letter token. "
+            "Inspect the prompt or lower beta."
+        )
+
+    # Conditional probability among the allowed answer letters.
     return torch.softmax(selected_logits, dim=-1)
 
 
@@ -121,6 +140,8 @@ def _format_result(
     choices: list[str],
     probability_sums: dict[str, float],
     num_permutations: int,
+    *,
+    implementation: str,
 ) -> dict[str, Any]:
     probabilities = {
         choice: probability_sums[choice] / num_permutations
@@ -128,7 +149,6 @@ def _format_result(
     }
 
     total = sum(probabilities.values())
-
     if total <= 0:
         raise RuntimeError(
             "Aggregated probabilities have zero total."
@@ -138,7 +158,6 @@ def _format_result(
         choice: probability / total
         for choice, probability in probabilities.items()
     }
-
     prediction = max(
         choices,
         key=lambda choice: probabilities[choice],
@@ -151,6 +170,7 @@ def _format_result(
         "choice_scoring_method":
             "balanced_cyclic_permutation_letter_probability",
         "choice_num_permutations": num_permutations,
+        "choice_vcd_implementation": implementation,
     }
 
 
@@ -170,7 +190,6 @@ def score_baseline_choices(
         choice: 0.0
         for choice in choices
     }
-
     permutations = _cyclic_permutations(choices)
 
     for ordered_choices in permutations:
@@ -178,13 +197,11 @@ def score_baseline_choices(
             question=question,
             ordered_choices=ordered_choices,
         )
-
         inputs = prepare_inputs(
             bundle=bundle,
             image=image,
             prompt=prompt,
         )
-
         outputs = bundle.model(**inputs)
         logits = outputs.logits[:, -1, :]
 
@@ -206,6 +223,7 @@ def score_baseline_choices(
         choices=choices,
         probability_sums=probability_sums,
         num_permutations=len(permutations),
+        implementation="baseline_clean_logits",
     )
 
 
@@ -213,11 +231,23 @@ def score_baseline_choices(
 def score_vcd_choices(
     bundle: ModelBundle,
     clean_image: Image.Image,
-    distorted_image: Image.Image,
     question: str,
     choices: list[str],
     alpha: float,
+    beta: float = 0.1,
+    noise_step: int = 500,
+    seed: int = 42,
+    # Kept only so older callers fail softly if they still pass it by name.
+    distorted_image: Image.Image | None = None,
 ) -> dict[str, Any]:
+    """
+    Score answer letters using the official VCD next-token distribution.
+
+    The full-vocabulary Adaptive Plausibility Constraint is applied first;
+    probabilities are then conditioned on the allowed option-letter tokens.
+    """
+    del distorted_image
+
     if not choices:
         raise ValueError(
             "VCD choice scoring requires choices."
@@ -227,38 +257,47 @@ def score_vcd_choices(
         choice: 0.0
         for choice in choices
     }
-
     permutations = _cyclic_permutations(choices)
 
-    for ordered_choices in permutations:
+    for permutation_index, ordered_choices in enumerate(
+        permutations
+    ):
         prompt = build_choice_scoring_prompt(
             question=question,
             ordered_choices=ordered_choices,
         )
-
         clean_inputs = prepare_inputs(
             bundle=bundle,
             image=clean_image,
             prompt=prompt,
         )
 
-        distorted_inputs = prepare_inputs(
-            bundle=bundle,
-            image=distorted_image,
-            prompt=prompt,
+        clean_pixel_values = clean_inputs["pixel_values"]
+        generator = make_generator(
+            clean_pixel_values,
+            seed + permutation_index,
+        )
+        distorted_pixel_values = add_diffusion_noise(
+            clean_pixel_values,
+            noise_step,
+            generator=generator,
         )
 
         clean_outputs = bundle.model(**clean_inputs)
-        distorted_outputs = bundle.model(**distorted_inputs)
 
-        clean_logits = clean_outputs.logits[:, -1, :].float()
-        distorted_logits = (
-            distorted_outputs.logits[:, -1, :].float()
+        distorted_inputs = dict(clean_inputs)
+        distorted_inputs["pixel_values"] = (
+            distorted_pixel_values
+        )
+        distorted_outputs = bundle.model(
+            **distorted_inputs
         )
 
-        vcd_logits = (
-            (1.0 + alpha) * clean_logits
-            - alpha * distorted_logits
+        vcd_logits = official_vcd_logits(
+            clean_outputs.logits[:, -1, :],
+            distorted_outputs.logits[:, -1, :],
+            alpha=alpha,
+            beta=beta,
         )
 
         letter_probabilities = _get_letter_probabilities(
@@ -275,8 +314,20 @@ def score_vcd_choices(
                 .cpu()
             )
 
-    return _format_result(
+    result = _format_result(
         choices=choices,
         probability_sums=probability_sums,
         num_permutations=len(permutations),
+        implementation=(
+            "official_vcd_formula_diffusion_noise_apc_"
+            "conditional_on_option_letters"
+        ),
     )
+    result.update(
+        {
+            "choice_vcd_alpha": alpha,
+            "choice_vcd_beta": beta,
+            "choice_vcd_noise_step": noise_step,
+        }
+    )
+    return result

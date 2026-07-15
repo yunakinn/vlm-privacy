@@ -1,12 +1,10 @@
 from __future__ import annotations
 
-import hashlib
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 import torch
-from PIL import Image, ImageFilter
 
 from .baseline_inference import _parse_prediction
 from .choice_scoring import score_vcd_choices
@@ -17,96 +15,203 @@ from .model_loader import (
     load_image,
     prepare_inputs,
 )
+from .vcd_core import (
+    OFFICIAL_VCD_DEFAULT_ALPHA,
+    OFFICIAL_VCD_DEFAULT_BETA,
+    OFFICIAL_VCD_DEFAULT_NOISE_STEP,
+    add_diffusion_noise,
+    make_generator,
+    official_vcd_logits,
+    sample_from_logits,
+    stable_example_seed,
+)
 
 
 @dataclass
 class VCDConfig:
     max_new_tokens: int = 64
-    alpha: float = 1.0
-    distortion: str = "blur"
-    blur_radius: float = 12.0
-    noise_std: float = 0.25
-    temperature: float = 0.0
+    alpha: float = OFFICIAL_VCD_DEFAULT_ALPHA
+    beta: float = OFFICIAL_VCD_DEFAULT_BETA
+    noise_step: int = OFFICIAL_VCD_DEFAULT_NOISE_STEP
+    temperature: float = 1.0
     top_p: float = 1.0
+    top_k: int = 0
     seed: int = 42
 
+    # Backward-compatible fields accepted by the previous run_pilot.py.
+    # They are intentionally ignored by the official implementation.
+    distortion: str | None = None
+    blur_radius: float | None = None
+    noise_std: float | None = None
 
-def _example_seed(base_seed: int, example_id: Any) -> int:
-    payload = f"{base_seed}:{example_id}".encode("utf-8")
-    digest = hashlib.sha256(payload).digest()
-    return int.from_bytes(digest[:8], "big") % (2**63 - 1)
 
+def _model_step(
+    bundle: ModelBundle,
+    *,
+    token_ids: torch.Tensor,
+    attention_mask: torch.Tensor,
+    pixel_values: torch.Tensor | None,
+    past_key_values: Any,
+) -> Any:
+    """
+    Run one cached LLaVA decoding step.
 
-def distort_image(
-    image: Image.Image,
-    config: VCDConfig,
-    seed: int | None = None,
-) -> Image.Image:
-    if config.distortion == "blur":
-        return image.filter(
-            ImageFilter.GaussianBlur(radius=config.blur_radius)
-        )
-
-    if config.distortion == "noise":
-        tensor = torch.tensor(
-            list(image.getdata()),
-            dtype=torch.float32,
-        ).reshape(image.height, image.width, 3)
-        tensor = tensor / 255.0
-
-        generator = torch.Generator(device="cpu")
-        generator.manual_seed(config.seed if seed is None else seed)
-        noise = torch.randn(
-            tensor.shape,
-            generator=generator,
-            dtype=tensor.dtype,
-        )
-
-        tensor = torch.clamp(
-            tensor + noise * config.noise_std,
-            0.0,
-            1.0,
-        )
-        data = (tensor * 255.0).byte().reshape(-1, 3).tolist()
-        out = Image.new("RGB", image.size)
-        out.putdata([tuple(pixel) for pixel in data])
-        return out
-
-    raise ValueError(
-        f"Unsupported VCD distortion: {config.distortion}"
+    The first step receives the complete prompt and image tensor. Later steps
+    receive only the newest token and the stream-specific KV cache.
+    """
+    return bundle.model(
+        input_ids=token_ids,
+        attention_mask=attention_mask,
+        pixel_values=pixel_values,
+        past_key_values=past_key_values,
+        use_cache=True,
+        return_dict=True,
     )
 
 
-def _sample_next(
-    logits: torch.Tensor,
+@torch.inference_mode()
+def generate_official_vcd(
+    bundle: ModelBundle,
+    *,
+    inputs: dict[str, torch.Tensor],
     config: VCDConfig,
-) -> torch.Tensor:
-    if config.temperature <= 0:
-        return torch.argmax(logits, dim=-1, keepdim=True)
+    example_seed: int,
+) -> tuple[torch.Tensor, list[float]]:
+    """
+    Hugging Face-compatible port of the official VCD decoding algorithm.
 
-    logits = logits / config.temperature
-    probs = torch.softmax(logits, dim=-1)
+    It maintains independent clean-image and distorted-image KV caches and
+    applies VCD + Adaptive Plausibility Constraint at every generated token.
+    """
+    input_ids = inputs["input_ids"]
+    attention_mask = inputs.get(
+        "attention_mask",
+        torch.ones_like(input_ids),
+    )
+    clean_pixel_values = inputs["pixel_values"]
 
-    if config.top_p < 1.0:
-        sorted_probs, sorted_indices = torch.sort(
-            probs,
-            descending=True,
+    noise_generator = make_generator(
+        clean_pixel_values,
+        example_seed,
+    )
+    distorted_pixel_values = add_diffusion_noise(
+        clean_pixel_values,
+        config.noise_step,
+        generator=noise_generator,
+    )
+
+    # Use a separate generator so the distortion draw does not consume the
+    # sampling RNG stream.
+    sampling_generator = make_generator(
+        input_ids,
+        example_seed + 1,
+    )
+
+    clean_past = None
+    distorted_past = None
+    generated_tokens: list[torch.Tensor] = []
+    selected_token_probs: list[float] = []
+
+    eos_token_id = bundle.processor.tokenizer.eos_token_id
+    if eos_token_id is None:
+        raise RuntimeError(
+            "Tokenizer must define eos_token_id."
         )
-        cumulative = torch.cumsum(sorted_probs, dim=-1)
-        keep = cumulative <= config.top_p
-        keep[..., 0] = True
-        filtered = torch.zeros_like(probs)
-        filtered.scatter_(
+
+    current_ids = input_ids
+
+    for _ in range(config.max_new_tokens):
+        first_step = clean_past is None
+        step_ids = (
+            current_ids
+            if first_step
+            else current_ids[:, -1:]
+        )
+
+        clean_outputs = _model_step(
+            bundle,
+            token_ids=step_ids,
+            attention_mask=attention_mask,
+            pixel_values=(
+                clean_pixel_values if first_step else None
+            ),
+            past_key_values=clean_past,
+        )
+        distorted_outputs = _model_step(
+            bundle,
+            token_ids=step_ids,
+            attention_mask=attention_mask,
+            pixel_values=(
+                distorted_pixel_values if first_step else None
+            ),
+            past_key_values=distorted_past,
+        )
+
+        clean_past = clean_outputs.past_key_values
+        distorted_past = distorted_outputs.past_key_values
+
+        clean_logits = clean_outputs.logits[:, -1, :]
+        distorted_logits = distorted_outputs.logits[:, -1, :]
+
+        vcd_logits = official_vcd_logits(
+            clean_logits,
+            distorted_logits,
+            alpha=config.alpha,
+            beta=config.beta,
+        )
+
+        next_token, warped_logits = sample_from_logits(
+            vcd_logits,
+            temperature=config.temperature,
+            top_p=config.top_p,
+            top_k=config.top_k,
+            generator=sampling_generator,
+        )
+
+        step_probabilities = torch.softmax(
+            warped_logits,
             dim=-1,
-            index=sorted_indices,
-            src=sorted_probs * keep,
         )
-        probs = filtered / filtered.sum(
-            dim=-1,
-            keepdim=True,
+        selected_token_probs.append(
+            float(
+                step_probabilities[
+                    0,
+                    next_token[0, 0],
+                ]
+                .detach()
+                .cpu()
+            )
         )
 
-    return torch.multinomial(probs, num_samples=1)
+        generated_tokens.append(next_token)
+        current_ids = torch.cat(
+            [current_ids, next_token],
+            dim=-1,
+        )
+        attention_mask = torch.cat(
+            [
+                attention_mask,
+                torch.ones_like(next_token),
+            ],
+            dim=-1,
+        )
+
+        if int(next_token[0, 0]) == int(eos_token_id):
+            break
+
+    if generated_tokens:
+        generated_ids = torch.cat(
+            generated_tokens,
+            dim=-1,
+        )[0]
+    else:
+        generated_ids = torch.empty(
+            0,
+            dtype=torch.long,
+            device=bundle.device,
+        )
+
+    return generated_ids, selected_token_probs
 
 
 @torch.inference_mode()
@@ -117,102 +222,43 @@ def run_vcd_example(
     config: VCDConfig,
 ) -> dict[str, Any]:
     image_path = Path(example["image"])
+
     if not image_path.is_absolute():
         image_path = Path(image_dir) / image_path
 
-    clean_image = load_image(image_path)
-    distortion_seed = _example_seed(
-        config.seed,
-        example.get("id"),
-    )
-    distorted_image = distort_image(
-        clean_image,
-        config,
-        seed=distortion_seed,
-    )
+    image = load_image(image_path)
     prompt = build_privacy_prompt(
         example["question"],
         example.get("choices"),
     )
-
-    clean_inputs = prepare_inputs(bundle, clean_image, prompt)
-    distorted_inputs = prepare_inputs(
+    inputs = prepare_inputs(
         bundle,
-        distorted_image,
+        image,
         prompt,
     )
 
-    input_ids = clean_inputs["input_ids"]
-    attention_mask = clean_inputs.get(
-        "attention_mask",
-        torch.ones_like(input_ids),
+    example_seed = stable_example_seed(
+        config.seed,
+        example.get("id", str(image_path)),
     )
-    clean_pixel_values = clean_inputs["pixel_values"]
-    distorted_pixel_values = distorted_inputs["pixel_values"]
 
-    generated: list[torch.Tensor] = []
-    token_probs: list[float] = []
-    eos_token_id = bundle.processor.tokenizer.eos_token_id
+    generated_ids, token_probs = generate_official_vcd(
+        bundle,
+        inputs=inputs,
+        config=config,
+        example_seed=example_seed,
+    )
 
-    for _ in range(config.max_new_tokens):
-        clean_outputs = bundle.model(
-            input_ids=input_ids,
-            attention_mask=attention_mask,
-            pixel_values=clean_pixel_values,
-        )
-        distorted_outputs = bundle.model(
-            input_ids=input_ids,
-            attention_mask=attention_mask,
-            pixel_values=distorted_pixel_values,
-        )
-
-        clean_logits = clean_outputs.logits[:, -1, :].float()
-        distorted_logits = (
-            distorted_outputs.logits[:, -1, :].float()
-        )
-        vcd_logits = (
-            (1.0 + config.alpha) * clean_logits
-            - config.alpha * distorted_logits
-        )
-
-        next_token = _sample_next(vcd_logits, config)
-        step_probs = torch.softmax(vcd_logits, dim=-1)
-        token_probs.append(
-            float(
-                step_probs[0, next_token.item()]
-                .detach()
-                .cpu()
-            )
-        )
-        generated.append(next_token.squeeze(0))
-
-        input_ids = torch.cat(
-            [input_ids, next_token],
-            dim=-1,
-        )
-        attention_mask = torch.cat(
-            [attention_mask, torch.ones_like(next_token)],
-            dim=-1,
-        )
-
-        if next_token.item() == eos_token_id:
-            break
-
-    if generated:
-        generated_ids = torch.cat(generated, dim=-1)
-    else:
-        generated_ids = torch.empty(
-            0,
-            dtype=torch.long,
-            device=bundle.device,
-        )
-
-    raw_output = decode_generated(bundle, generated_ids)
+    raw_output = decode_generated(
+        bundle,
+        generated_ids,
+    )
     prediction = _parse_prediction(
         raw_output,
         example.get("choices"),
     )
-    confidence = {
+
+    confidence: dict[str, Any] = {
         "avg_token_prob": (
             sum(token_probs) / len(token_probs)
             if token_probs
@@ -224,8 +270,15 @@ def run_vcd_example(
             else 0.0
         ),
         "vcd_alpha": config.alpha,
-        "vcd_distortion": config.distortion,
-        "vcd_distortion_seed": distortion_seed,
+        "vcd_beta": config.beta,
+        "vcd_noise_step": config.noise_step,
+        "vcd_temperature": config.temperature,
+        "vcd_top_p": config.top_p,
+        "vcd_top_k": config.top_k,
+        "vcd_seed": example_seed,
+        "vcd_implementation":
+            "official_vcd_algorithm_huggingface_port",
+        "official_vcd_reproduction": True,
     }
 
     choices = example.get("choices")
@@ -233,11 +286,13 @@ def run_vcd_example(
         confidence.update(
             score_vcd_choices(
                 bundle=bundle,
-                clean_image=clean_image,
-                distorted_image=distorted_image,
+                clean_image=image,
                 question=example["question"],
                 choices=choices,
                 alpha=config.alpha,
+                beta=config.beta,
+                noise_step=config.noise_step,
+                seed=example_seed,
             )
         )
 
@@ -247,7 +302,7 @@ def run_vcd_example(
         "image": str(image_path),
         "question": example["question"],
         "attribute": example.get("attribute"),
-        "choices": example.get("choices"),
+        "choices": choices,
         "answer": example.get("answer"),
         "prediction": prediction,
         "raw_output": raw_output,

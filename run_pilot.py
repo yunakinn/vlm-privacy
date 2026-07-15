@@ -75,21 +75,37 @@ def parse_args() -> argparse.Namespace:
         "--vcd-alpha",
         type=float,
         default=1.0,
+        help="Official VCD contrast strength.",
     )
     parser.add_argument(
-        "--vcd-distortion",
-        default="blur",
-        choices=["blur", "noise"],
-    )
-    parser.add_argument(
-        "--vcd-blur-radius",
+        "--vcd-beta",
         type=float,
-        default=12.0,
+        default=0.1,
+        help="Adaptive Plausibility Constraint threshold.",
     )
     parser.add_argument(
-        "--vcd-noise-std",
+        "--vcd-noise-step",
+        type=int,
+        default=500,
+        help="Diffusion-noise step for the distorted image.",
+    )
+    parser.add_argument(
+        "--vcd-temperature",
         type=float,
-        default=0.25,
+        default=1.0,
+        help="Sampling temperature.",
+    )
+    parser.add_argument(
+        "--vcd-top-p",
+        type=float,
+        default=1.0,
+        help="Top-p sampling value.",
+    )
+    parser.add_argument(
+        "--vcd-top-k",
+        type=int,
+        default=0,
+        help="Top-k sampling value.",
     )
     parser.add_argument(
         "--seed",
@@ -220,20 +236,24 @@ def build_run_metadata(
                 "name": "llava_greedy_baseline",
             },
             "vcd": {
-                "name": "simplified_vcd",
-                "official_vcd_reproduction": False,
+                "name": "official_vcd_algorithm_huggingface_port",
+                "official_vcd_reproduction": True,
                 "description": (
-                    "Contrastive decoding using clean and "
-                    "distorted image logits."
+                    "Official VCD algorithm port using diffusion "
+                    "noise, independent clean/distorted KV caches, "
+                    "and the Adaptive Plausibility Constraint."
                 ),
                 "formula": (
                     "(1 + alpha) * clean_logits "
                     "- alpha * distorted_logits"
                 ),
                 "alpha": args.vcd_alpha,
-                "distortion": args.vcd_distortion,
-                "blur_radius": args.vcd_blur_radius,
-                "noise_std": args.vcd_noise_std,
+                "beta": args.vcd_beta,
+                "distortion": "diffusion_noise",
+                "noise_step": args.vcd_noise_step,
+                "temperature": args.vcd_temperature,
+                "top_p": args.vcd_top_p,
+                "top_k": args.vcd_top_k,
                 "distortion_seed": args.seed,
             },
         },
@@ -306,9 +326,11 @@ def validate_resume_metadata(
         "max_new_tokens": args.max_new_tokens,
         "seed": args.seed,
         "vcd_alpha": args.vcd_alpha,
-        "vcd_distortion": args.vcd_distortion,
-        "vcd_blur_radius": args.vcd_blur_radius,
-        "vcd_noise_std": args.vcd_noise_std,
+        "vcd_beta": args.vcd_beta,
+        "vcd_noise_step": args.vcd_noise_step,
+        "vcd_temperature": args.vcd_temperature,
+        "vcd_top_p": args.vcd_top_p,
+        "vcd_top_k": args.vcd_top_k,
     }
 
     actual = {
@@ -319,9 +341,11 @@ def validate_resume_metadata(
         "max_new_tokens": experiment.get("max_new_tokens"),
         "seed": experiment.get("seed"),
         "vcd_alpha": vcd.get("alpha"),
-        "vcd_distortion": vcd.get("distortion"),
-        "vcd_blur_radius": vcd.get("blur_radius"),
-        "vcd_noise_std": vcd.get("noise_std"),
+        "vcd_beta": vcd.get("beta"),
+        "vcd_noise_step": vcd.get("noise_step"),
+        "vcd_temperature": vcd.get("temperature"),
+        "vcd_top_p": vcd.get("top_p"),
+        "vcd_top_k": vcd.get("top_k"),
     }
 
     mismatches = {
@@ -473,9 +497,11 @@ def main() -> None:
     vcd_config = VCDConfig(
         max_new_tokens=args.max_new_tokens,
         alpha=args.vcd_alpha,
-        distortion=args.vcd_distortion,
-        blur_radius=args.vcd_blur_radius,
-        noise_std=args.vcd_noise_std,
+        beta=args.vcd_beta,
+        noise_step=args.vcd_noise_step,
+        temperature=args.vcd_temperature,
+        top_p=args.vcd_top_p,
+        top_k=args.vcd_top_k,
         seed=args.seed,
     )
 
