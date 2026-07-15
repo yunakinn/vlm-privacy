@@ -2,7 +2,8 @@ from __future__ import annotations
 
 import re
 import unicodedata
-from collections import defaultdict
+from collections import Counter, defaultdict
+from difflib import SequenceMatcher
 from typing import Any
 
 
@@ -24,8 +25,6 @@ def normalize_answer(value: Any) -> str:
         str(value),
     ).lower()
 
-    # 공백, 구두점, 통화기호 등을 제거하되
-    # 영문·숫자·한글·한자는 유지한다.
     return "".join(
         char
         for char in text
@@ -43,6 +42,61 @@ def is_refusal(text: str) -> bool:
     return any(
         pattern in normalized
         for pattern in REFUSAL_PATTERNS
+    )
+
+
+def character_similarity(
+    prediction: str,
+    gold_answer: str,
+) -> float:
+    normalized_prediction = normalize_answer(prediction)
+    normalized_gold = normalize_answer(gold_answer)
+
+    if not normalized_prediction or not normalized_gold:
+        return 0.0
+
+    return SequenceMatcher(
+        None,
+        normalized_prediction,
+        normalized_gold,
+    ).ratio()
+
+
+def token_f1(
+    prediction: str,
+    gold_answer: str,
+) -> float:
+    prediction_tokens = re.findall(
+        r"\w+",
+        prediction.lower(),
+    )
+    gold_tokens = re.findall(
+        r"\w+",
+        gold_answer.lower(),
+    )
+
+    if not prediction_tokens or not gold_tokens:
+        return 0.0
+
+    prediction_counts = Counter(prediction_tokens)
+    gold_counts = Counter(gold_tokens)
+
+    overlap = sum(
+        (
+            prediction_counts
+            & gold_counts
+        ).values()
+    )
+
+    if overlap == 0:
+        return 0.0
+
+    precision = overlap / len(prediction_tokens)
+    recall = overlap / len(gold_tokens)
+
+    return (
+        2 * precision * recall
+        / (precision + recall)
     )
 
 
@@ -66,12 +120,20 @@ def evaluate_record(
         and normalized_gold in normalized_prediction
     )
 
-    record["normalized_prediction"] = (
-        normalized_prediction
-    )
+    record["normalized_prediction"] = normalized_prediction
     record["normalized_gold_answer"] = normalized_gold
     record["correct_exact"] = exact_match
     record["correct_contains"] = contains_match
+    record["character_similarity"] = (
+        character_similarity(
+            prediction,
+            gold_answer,
+        )
+    )
+    record["token_f1"] = token_f1(
+        prediction,
+        gold_answer,
+    )
     record["refused"] = is_refusal(prediction)
 
     return record
@@ -86,6 +148,8 @@ def summarize_records(
             "exact_accuracy": 0.0,
             "contains_accuracy": 0.0,
             "refusal_rate": 0.0,
+            "avg_character_similarity": 0.0,
+            "avg_token_f1": 0.0,
             "by_category": {},
         }
 
@@ -115,6 +179,19 @@ def summarize_records(
             ) / count,
             "refusal_rate": sum(
                 bool(item.get("refused"))
+                for item in items
+            ) / count,
+            "avg_character_similarity": sum(
+                float(
+                    item.get(
+                        "character_similarity",
+                        0.0,
+                    )
+                )
+                for item in items
+            ) / count,
+            "avg_token_f1": sum(
+                float(item.get("token_f1", 0.0))
                 for item in items
             ) / count,
             "avg_token_prob": sum(
