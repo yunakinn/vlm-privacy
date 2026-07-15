@@ -51,7 +51,7 @@ def parse_args() -> argparse.Namespace:
         "--methods",
         nargs="+",
         default=["baseline", "vcd"],
-        choices=["baseline", "vcd"],
+        choices=["baseline", "vcd", "icd"],
     )
     parser.add_argument(
         "--limit",
@@ -106,6 +106,38 @@ def parse_args() -> argparse.Namespace:
         type=int,
         default=0,
         help="Top-k sampling value.",
+    )
+    parser.add_argument(
+        "--icd-alpha",
+        type=float,
+        default=1.0,
+    )
+    parser.add_argument(
+        "--icd-beta",
+        type=float,
+        default=0.1,
+    )
+    parser.add_argument(
+        "--icd-temperature",
+        type=float,
+        default=1.0,
+    )
+    parser.add_argument(
+        "--icd-top-p",
+        type=float,
+        default=1.0,
+    )
+    parser.add_argument(
+        "--icd-top-k",
+        type=int,
+        default=0,
+    )
+    parser.add_argument(
+        "--icd-disturbance-instruction",
+        default=(
+            "You are a confused object detector who provides only "
+            "a vague and incomplete impression of the image."
+        ),
     )
     parser.add_argument(
         "--seed",
@@ -256,6 +288,26 @@ def build_run_metadata(
                 "top_k": args.vcd_top_k,
                 "distortion_seed": args.seed,
             },
+            "icd": {
+                "name": "icd_algorithm_huggingface_port",
+                "exact_official_reproduction": False,
+                "description": (
+                    "Instruction contrastive decoding using normal "
+                    "and disturbance instructions with APC."
+                ),
+                "formula": (
+                    "(1 + alpha) * normal_logits "
+                    "- alpha * disturbed_logits"
+                ),
+                "alpha": args.icd_alpha,
+                "beta": args.icd_beta,
+                "temperature": args.icd_temperature,
+                "top_p": args.icd_top_p,
+                "top_k": args.icd_top_k,
+                "disturbance_instruction": (
+                    args.icd_disturbance_instruction
+                ),
+            },
         },
         "choice_scoring": {
             "method": first_confidence.get(
@@ -316,7 +368,12 @@ def validate_resume_metadata(
 
     experiment = metadata.get("experiment", {})
     model = metadata.get("model", {})
-    vcd = metadata.get("method_implementations", {}).get("vcd", {})
+    method_implementations = metadata.get(
+        "method_implementations",
+        {},
+    )
+    vcd = method_implementations.get("vcd", {})
+    icd = method_implementations.get("icd", {})
 
     expected = {
         "annotations_sha256": sha256_file(args.annotations),
@@ -331,6 +388,14 @@ def validate_resume_metadata(
         "vcd_temperature": args.vcd_temperature,
         "vcd_top_p": args.vcd_top_p,
         "vcd_top_k": args.vcd_top_k,
+        "icd_alpha": args.icd_alpha,
+        "icd_beta": args.icd_beta,
+        "icd_temperature": args.icd_temperature,
+        "icd_top_p": args.icd_top_p,
+        "icd_top_k": args.icd_top_k,
+        "icd_disturbance_instruction": (
+            args.icd_disturbance_instruction
+        ),
     }
 
     actual = {
@@ -346,6 +411,14 @@ def validate_resume_metadata(
         "vcd_temperature": vcd.get("temperature"),
         "vcd_top_p": vcd.get("top_p"),
         "vcd_top_k": vcd.get("top_k"),
+        "icd_alpha": icd.get("alpha"),
+        "icd_beta": icd.get("beta"),
+        "icd_temperature": icd.get("temperature"),
+        "icd_top_p": icd.get("top_p"),
+        "icd_top_k": icd.get("top_k"),
+        "icd_disturbance_instruction": (
+            icd.get("disturbance_instruction")
+        ),
     }
 
     mismatches = {
@@ -483,6 +556,10 @@ def main() -> None:
         VCDConfig,
         run_vcd_example,
     )
+    from src.icd_inference import (
+        ICDConfig,
+        run_icd_example,
+    )
 
     bundle = load_llava_model(
         model_id=args.model_id,
@@ -503,6 +580,19 @@ def main() -> None:
         top_p=args.vcd_top_p,
         top_k=args.vcd_top_k,
         seed=args.seed,
+    )
+
+    icd_config = ICDConfig(
+        max_new_tokens=args.max_new_tokens,
+        alpha=args.icd_alpha,
+        beta=args.icd_beta,
+        temperature=args.icd_temperature,
+        top_p=args.icd_top_p,
+        top_k=args.icd_top_k,
+        seed=args.seed,
+        disturbance_instruction=(
+            args.icd_disturbance_instruction
+        ),
     )
 
     write_json(
@@ -553,6 +643,21 @@ def main() -> None:
                 append_jsonl(predictions_path, record)
                 records.append(record)
                 completed.add((example_id, "vcd"))
+                progress.update(1)
+
+            if (
+                "icd" in args.methods
+                and (example_id, "icd") not in completed
+            ):
+                record = run_icd_example(
+                    bundle,
+                    example,
+                    args.image_dir,
+                    icd_config,
+                )
+                append_jsonl(predictions_path, record)
+                records.append(record)
+                completed.add((example_id, "icd"))
                 progress.update(1)
 
     write_json(
