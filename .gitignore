@@ -24,3 +24,6 @@ results/*
 data/images/*
 !data/images/.gitkeep
 results*/
+backups/
+run_pilot (*.py
+run_pilot.py.simplified_backup
