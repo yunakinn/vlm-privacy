@@ -27,3 +27,7 @@ results*/
 backups/
 run_pilot (*.py
 run_pilot.py.simplified_backup
+
+*.before_*
+*.backup
+*.bak
