@@ -51,7 +51,7 @@ def parse_args() -> argparse.Namespace:
         "--methods",
         nargs="+",
         default=["baseline", "vcd"],
-        choices=["baseline", "vcd", "icd"],
+        choices=["baseline", "vcd", "icd", "m3id"],
     )
     parser.add_argument(
         "--limit",
@@ -560,6 +560,9 @@ def main() -> None:
         ICDConfig,
         run_icd_example,
     )
+    from src.m3id_inference import (
+        run_m3id_example,
+    )
 
     bundle = load_llava_model(
         model_id=args.model_id,
@@ -658,6 +661,21 @@ def main() -> None:
                 append_jsonl(predictions_path, record)
                 records.append(record)
                 completed.add((example_id, "icd"))
+                progress.update(1)
+
+            if (
+                "m3id" in args.methods
+                and (example_id, "m3id") not in completed
+            ):
+                record = run_m3id_example(
+                    bundle,
+                    example,
+                    args.image_dir,
+                    baseline_config,
+                )
+                append_jsonl(predictions_path, record)
+                records.append(record)
+                completed.add((example_id, "m3id"))
                 progress.update(1)
 
     write_json(
