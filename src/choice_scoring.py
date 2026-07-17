@@ -332,3 +332,81 @@ def score_vcd_choices(
         }
     )
     return result
+
+
+@torch.inference_mode()
+def score_m3id_choices(
+    bundle: ModelBundle,
+    image: Image.Image,
+    question: str,
+    choices: list[str],
+    beta: float = 0.1,
+    gamma: float = 0.02,
+    t: int = 5,
+) -> dict[str, Any]:
+    """
+    Score answer letters using M3ID (Multi-Modal Mutual-Information Decoding).
+
+    Reimplementation follows the formula from Favero et al. 2024
+    (arXiv:2403.14003), as verified against the community reimplementation
+    in sangminwoo/RITUAL (official code for RITUAL, arXiv:2405.17821).
+
+    p_orig: prediction with the image present.
+    p_hal: prediction with the image entirely removed (blank image).
+    gamma_t = exp(-gamma * t); mixing coefficient (1 - gamma_t) / gamma_t.
+    Default t=5 is used as a fixed generation-step proxy since
+    choice-scoring answers in a single token rather than a full sequence.
+    """
+    if not choices:
+        raise ValueError("M3ID choice scoring requires choices.")
+
+    probability_sums = {choice: 0.0 for choice in choices}
+    permutations = _cyclic_permutations(choices)
+
+    no_image = Image.new("RGB", image.size, color=(0, 0, 0))
+
+    gamma_t = torch.exp(torch.tensor(-float(gamma) * t))
+    mix_coefficient = (1.0 - gamma_t) / gamma_t
+
+    for ordered_choices in permutations:
+        prompt = build_choice_scoring_prompt(
+            question=question,
+            ordered_choices=ordered_choices,
+        )
+
+        inputs_orig = prepare_inputs(bundle=bundle, image=image, prompt=prompt)
+        outputs_orig = bundle.model(**inputs_orig)
+        logits_orig = outputs_orig.logits[:, -1, :]
+
+        inputs_hal = prepare_inputs(bundle=bundle, image=no_image, prompt=prompt)
+        outputs_hal = bundle.model(**inputs_hal)
+        logits_hal = outputs_hal.logits[:, -1, :]
+
+        m3id_logits = logits_orig + (logits_orig - logits_hal) * mix_coefficient
+
+        cutoff = (
+            logits_orig.float().max(dim=-1, keepdim=True).values
+            + torch.log(torch.tensor(float(beta)))
+        )
+        m3id_logits = m3id_logits.float().masked_fill(
+            logits_orig.float() < cutoff, -float("inf")
+        )
+
+        letter_probabilities = _get_letter_probabilities(
+            bundle=bundle,
+            prompt=prompt,
+            logits=m3id_logits,
+            num_choices=len(ordered_choices),
+        )
+
+        for position, choice in enumerate(ordered_choices):
+            probability_sums[choice] += float(
+                letter_probabilities[position].detach().cpu()
+            )
+
+    return _format_result(
+        choices=choices,
+        probability_sums=probability_sums,
+        num_permutations=len(permutations),
+        implementation="m3id_reimplementation_ritual_verified",
+    )
