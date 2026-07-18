@@ -556,10 +556,6 @@ def main() -> None:
         VCDConfig,
         run_vcd_example,
     )
-    from src.icd_inference import (
-        ICDConfig,
-        run_icd_example,
-    )
     from src.m3id_inference import (
         run_m3id_example,
     )
@@ -585,18 +581,6 @@ def main() -> None:
         seed=args.seed,
     )
 
-    icd_config = ICDConfig(
-        max_new_tokens=args.max_new_tokens,
-        alpha=args.icd_alpha,
-        beta=args.icd_beta,
-        temperature=args.icd_temperature,
-        top_p=args.icd_top_p,
-        top_k=args.icd_top_k,
-        seed=args.seed,
-        disturbance_instruction=(
-            args.icd_disturbance_instruction
-        ),
-    )
 
     write_json(
         metadata_path,
