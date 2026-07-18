@@ -1,0 +1,2406 @@
+{
+  "num_predictions": 1800,
+  "methods": {
+    "baseline": {
+      "num_predictions": 600,
+      "generation_metrics": {
+        "num_scored": 600,
+        "num_correct": 261,
+        "accuracy": 0.435,
+        "parse_error_count": 0,
+        "avg_token_confidence": 0.8282793263511525,
+        "correct_answer_avg_token_confidence": 0.8441602935488806,
+        "wrong_answer_avg_token_confidence": 0.8160523870042292,
+        "per_class_accuracy": {
+          "middle aged": 0.32,
+          "older": 0.020942408376963352,
+          "young": 0.9234449760765551
+        },
+        "prediction_distribution": {
+          "middle aged": 199,
+          "older": 4,
+          "young": 397
+        },
+        "confusion_matrix": {
+          "middle aged": {
+            "middle aged": 64,
+            "young": 136
+          },
+          "older": {
+            "middle aged": 119,
+            "older": 4,
+            "young": 68
+          },
+          "young": {
+            "middle aged": 16,
+            "young": 193
+          }
+        }
+      },
+      "choice_metrics": {
+        "num_scored": 600,
+        "num_correct": 278,
+        "accuracy": 0.4633333333333333,
+        "avg_choice_confidence": 0.44669273031061985,
+        "correct_answer_avg_choice_confidence": 0.4747386906232572,
+        "wrong_answer_avg_choice_confidence": 0.4224791372456723,
+        "avg_ground_truth_probability": 0.3823755296870101,
+        "multiclass_brier_score": 0.6002587785717977,
+        "ece_10_bins": 0.1020875342837041,
+        "per_class_accuracy": {
+          "middle aged": 0.355,
+          "older": 0.09424083769633508,
+          "young": 0.9043062200956937
+        },
+        "prediction_distribution": {
+          "middle aged": 215,
+          "older": 21,
+          "young": 364
+        },
+        "confusion_matrix": {
+          "middle aged": {
+            "middle aged": 71,
+            "older": 3,
+            "young": 126
+          },
+          "older": {
+            "middle aged": 124,
+            "older": 18,
+            "young": 49
+          },
+          "young": {
+            "middle aged": 20,
+            "young": 189
+          }
+        }
+      }
+    },
+    "vcd": {
+      "num_predictions": 600,
+      "generation_metrics": {
+        "num_scored": 600,
+        "num_correct": 267,
+        "accuracy": 0.445,
+        "parse_error_count": 0,
+        "avg_token_confidence": 0.8314326356118545,
+        "correct_answer_avg_token_confidence": 0.8581473403023127,
+        "wrong_answer_avg_token_confidence": 0.8100127372564424,
+        "per_class_accuracy": {
+          "middle aged": 0.325,
+          "older": 0.24083769633507854,
+          "young": 0.7464114832535885
+        },
+        "prediction_distribution": {
+          "middle aged": 186,
+          "older": 76,
+          "young": 338
+        },
+        "confusion_matrix": {
+          "middle aged": {
+            "middle aged": 65,
+            "older": 22,
+            "young": 113
+          },
+          "older": {
+            "middle aged": 76,
+            "older": 46,
+            "young": 69
+          },
+          "young": {
+            "middle aged": 45,
+            "older": 8,
+            "young": 156
+          }
+        }
+      },
+      "choice_metrics": {
+        "num_scored": 600,
+        "num_correct": 287,
+        "accuracy": 0.47833333333333333,
+        "avg_choice_confidence": 0.4894300505017399,
+        "correct_answer_avg_choice_confidence": 0.5210007547144806,
+        "wrong_answer_avg_choice_confidence": 0.4604818329009213,
+        "avg_ground_truth_probability": 0.39805270557101013,
+        "multiclass_brier_score": 0.5937988627499169,
+        "ece_10_bins": 0.10052889260993512,
+        "per_class_accuracy": {
+          "middle aged": 0.31,
+          "older": 0.15706806282722513,
+          "young": 0.9330143540669856
+        },
+        "prediction_distribution": {
+          "middle aged": 168,
+          "older": 39,
+          "young": 393
+        },
+        "confusion_matrix": {
+          "middle aged": {
+            "middle aged": 62,
+            "older": 7,
+            "young": 131
+          },
+          "older": {
+            "middle aged": 94,
+            "older": 30,
+            "young": 67
+          },
+          "young": {
+            "middle aged": 12,
+            "older": 2,
+            "young": 195
+          }
+        }
+      }
+    },
+    "m3id": {
+      "num_predictions": 600,
+      "generation_metrics": {
+        "num_scored": 600,
+        "num_correct": 261,
+        "accuracy": 0.435,
+        "parse_error_count": 0,
+        "avg_token_confidence": 0.8282793263511525,
+        "correct_answer_avg_token_confidence": 0.8441602935488806,
+        "wrong_answer_avg_token_confidence": 0.8160523870042292,
+        "per_class_accuracy": {
+          "middle aged": 0.32,
+          "older": 0.020942408376963352,
+          "young": 0.9234449760765551
+        },
+        "prediction_distribution": {
+          "middle aged": 199,
+          "older": 4,
+          "young": 397
+        },
+        "confusion_matrix": {
+          "middle aged": {
+            "middle aged": 64,
+            "young": 136
+          },
+          "older": {
+            "middle aged": 119,
+            "older": 4,
+            "young": 68
+          },
+          "young": {
+            "middle aged": 16,
+            "young": 193
+          }
+        }
+      },
+      "choice_metrics": {
+        "num_scored": 600,
+        "num_correct": 281,
+        "accuracy": 0.4683333333333333,
+        "avg_choice_confidence": 0.4544161282594404,
+        "correct_answer_avg_choice_confidence": 0.48468498534940113,
+        "wrong_answer_avg_choice_confidence": 0.4277529657444575,
+        "avg_ground_truth_probability": 0.3874792620414,
+        "multiclass_brier_score": 0.594377655783156,
+        "ece_10_bins": 0.11031232761537894,
+        "per_class_accuracy": {
+          "middle aged": 0.355,
+          "older": 0.1099476439790576,
+          "young": 0.9043062200956937
+        },
+        "prediction_distribution": {
+          "middle aged": 214,
+          "older": 25,
+          "young": 361
+        },
+        "confusion_matrix": {
+          "middle aged": {
+            "middle aged": 71,
+            "older": 4,
+            "young": 125
+          },
+          "older": {
+            "middle aged": 123,
+            "older": 21,
+            "young": 47
+          },
+          "young": {
+            "middle aged": 20,
+            "young": 189
+          }
+        }
+      }
+    }
+  },
+  "generation_paired_comparison": {
+    "num_paired_examples": 600,
+    "prediction_changed_count": 200,
+    "prediction_changed_rate": 0.3333333333333333,
+    "both_correct": 188,
+    "baseline_only_correct": 73,
+    "vcd_only_correct": 79,
+    "both_wrong": 260,
+    "net_vcd_correct_gain": 6,
+    "changed_examples": [
+      {
+        "id": "pa100k_age_1059",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_11371",
+        "answer": "older",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_11521",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_11880",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_12245",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_12394",
+        "answer": "young",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_13278",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_14229",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_14298",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_14378",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_14861",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_1520",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_16252",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_17994",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_19665",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_20858",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_21096",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_21221",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_21890",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_2294",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_23940",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_24634",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_24858",
+        "answer": "older",
+        "baseline_prediction": "older",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_25438",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "older",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_26440",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_27299",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_27985",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_28094",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_29213",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_29642",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_30147",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_30568",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "older",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_31078",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_31515",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_31527",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_31852",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_31979",
+        "answer": "older",
+        "baseline_prediction": "older",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_32388",
+        "answer": "older",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_32812",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_32962",
+        "answer": "older",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_33117",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_33157",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_33295",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_3467",
+        "answer": "young",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_34949",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_35166",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_36136",
+        "answer": "young",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_36255",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_36338",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_36851",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_38314",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_39388",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_39994",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_40383",
+        "answer": "older",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_40680",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_4074",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_41206",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_41574",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_41973",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_42306",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_42402",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_42476",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_43248",
+        "answer": "older",
+        "baseline_prediction": "young",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_44143",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_44765",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_44841",
+        "answer": "older",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_45719",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_45859",
+        "answer": "older",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_46025",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_46121",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_46310",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_46881",
+        "answer": "young",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_48814",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_48985",
+        "answer": "older",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_50501",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_50671",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_50937",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_52495",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_53084",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_53404",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_53717",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_53787",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_54195",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_54366",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_54455",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_54713",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_5491",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_55111",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_55178",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_55285",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "older",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_55514",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_55805",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_56434",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_56667",
+        "answer": "older",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_56753",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_56827",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_57026",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_57461",
+        "answer": "young",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_57648",
+        "answer": "older",
+        "baseline_prediction": "young",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_58105",
+        "answer": "older",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_58293",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_5883",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_59031",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_60215",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_6033",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_60376",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_61103",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_62382",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_62456",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_62834",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_62896",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_63259",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_6424",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_64645",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_65038",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_6562",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_66021",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_6815",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_68828",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_69731",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_69834",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_69837",
+        "answer": "older",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_6987",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_70319",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_70928",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_71243",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_71424",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_7152",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_72049",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_72050",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_72564",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_72680",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_73200",
+        "answer": "young",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_73377",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_74545",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_75060",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_75077",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_75742",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_76130",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_76805",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_7697",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_77103",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_77254",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_77365",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_77569",
+        "answer": "young",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_77813",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_77873",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_78010",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_78137",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_78166",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_78515",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_78688",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_79357",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "older",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_79414",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_79788",
+        "answer": "older",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_80283",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_81081",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_81248",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_81944",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_82067",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_8215",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_82177",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_8244",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_82644",
+        "answer": "older",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_83095",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_83114",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_83762",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_83887",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_85263",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_85469",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_85937",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_86845",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_87031",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_88286",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_88358",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_90169",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_90984",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_9099",
+        "answer": "young",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_91274",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_91303",
+        "answer": "older",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_91936",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_96516",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_96763",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_96867",
+        "answer": "older",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_96885",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_96900",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_96956",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_97227",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_97550",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_97671",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_97854",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_97953",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_98178",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_98344",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_98361",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_98448",
+        "answer": "older",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_98463",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_98515",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_98521",
+        "answer": "older",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_98678",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      }
+    ]
+  },
+  "choice_paired_comparison": {
+    "num_paired_examples": 600,
+    "prediction_changed_count": 69,
+    "prediction_changed_rate": 0.115,
+    "both_correct": 259,
+    "baseline_only_correct": 19,
+    "vcd_only_correct": 28,
+    "both_wrong": 294,
+    "net_vcd_correct_gain": 9,
+    "changed_examples": [
+      {
+        "id": "pa100k_age_12394",
+        "answer": "young",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_13042",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_13183",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_14229",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_14378",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_19665",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_2217",
+        "answer": "young",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_22412",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_23732",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_27299",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_27985",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_31273",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_31515",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_32388",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_33169",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_35166",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_36620",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_38905",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_39674",
+        "answer": "young",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_4074",
+        "answer": "young",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_42435",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_44143",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_45719",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_46375",
+        "answer": "young",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_46881",
+        "answer": "young",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_48814",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_50501",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_50937",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_52529",
+        "answer": "young",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_53511",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_53961",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_54366",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_5491",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_57824",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_59573",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_60215",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_61172",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_61543",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_61747",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_61988",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_64501",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_68828",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_71008",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_71424",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_72680",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_73200",
+        "answer": "young",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_73377",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_74093",
+        "answer": "young",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_74545",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_76805",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_77873",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_79175",
+        "answer": "young",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_79414",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_81032",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_81672",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_8187",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_82125",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_82943",
+        "answer": "young",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_83762",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_84546",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_85469",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_85937",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_86055",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_89403",
+        "answer": "middle aged",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_91303",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_95405",
+        "answer": "middle aged",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_97243",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "older",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "pa100k_age_99243",
+        "answer": "older",
+        "baseline_prediction": "middle aged",
+        "vcd_prediction": "young",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "pa100k_age_99769",
+        "answer": "older",
+        "baseline_prediction": "young",
+        "vcd_prediction": "middle aged",
+        "baseline_correct": false,
+        "vcd_correct": false
+      }
+    ]
+  }
+}
