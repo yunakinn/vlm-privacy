@@ -35,3 +35,4 @@ run_pilot.py.simplified_backup
 *.jsonl
 *.pt
 *.pth
+venv/
