@@ -410,3 +410,75 @@ def score_m3id_choices(
         num_permutations=len(permutations),
         implementation="m3id_reimplementation_ritual_verified",
     )
+
+
+@torch.inference_mode()
+def score_icd_choices(
+    bundle: ModelBundle,
+    image: Image.Image,
+    question: str,
+    choices: list[str],
+    alpha: float = 1.0,
+    beta: float = 0.1,
+    disturbance_instruction: str = (
+        "You are a confused object detector who provides only "
+        "a vague and incomplete impression of the image."
+    ),
+) -> dict[str, Any]:
+    """
+    Score answer letters using ICD (Instruction Contrastive Decoding).
+
+    Reimplementation follows the formula from Wang et al. 2024
+    (arXiv:2403.18715), official repo: github.com/p1k0pan/ICD,
+    verified line-by-line against icd_utils/icd_sample.py.
+
+    logits_orig: prediction with the standard instruction.
+    logits_disturbed: prediction with a disturbance instruction that
+    induces confusion/misalignment (same prompt, different system framing).
+    """
+    if not choices:
+        raise ValueError("ICD choice scoring requires choices.")
+
+    probability_sums = {choice: 0.0 for choice in choices}
+    permutations = _cyclic_permutations(choices)
+
+    for ordered_choices in permutations:
+        prompt = build_choice_scoring_prompt(
+            question=question,
+            ordered_choices=ordered_choices,
+        )
+        disturbed_prompt = disturbance_instruction + "\\n" + prompt
+
+        inputs_orig = prepare_inputs(bundle=bundle, image=image, prompt=prompt)
+        outputs_orig = bundle.model(**inputs_orig)
+        logits_orig = outputs_orig.logits[:, -1, :]
+
+        inputs_disturbed = prepare_inputs(bundle=bundle, image=image, prompt=disturbed_prompt)
+        outputs_disturbed = bundle.model(**inputs_disturbed)
+        logits_disturbed = outputs_disturbed.logits[:, -1, :]
+
+        cutoff = (
+            logits_orig.float().max(dim=-1, keepdim=True).values
+            + torch.log(torch.tensor(float(beta)))
+        )
+        icd_logits = (1.0 + alpha) * logits_orig.float() - alpha * logits_disturbed.float()
+        icd_logits = icd_logits.masked_fill(logits_orig.float() < cutoff, -float("inf"))
+
+        letter_probabilities = _get_letter_probabilities(
+            bundle=bundle,
+            prompt=prompt,
+            logits=icd_logits,
+            num_choices=len(ordered_choices),
+        )
+
+        for position, choice in enumerate(ordered_choices):
+            probability_sums[choice] += float(
+                letter_probabilities[position].detach().cpu()
+            )
+
+    return _format_result(
+        choices=choices,
+        probability_sums=probability_sums,
+        num_permutations=len(permutations),
+        implementation="icd_official_port",
+    )

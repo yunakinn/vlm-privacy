@@ -559,6 +559,10 @@ def main() -> None:
     from src.m3id_inference import (
         run_m3id_example,
     )
+    from src.icd_inference import (
+        ICDConfig,
+        run_icd_example,
+    )
 
     bundle = load_llava_model(
         model_id=args.model_id,
@@ -579,6 +583,17 @@ def main() -> None:
         top_p=args.vcd_top_p,
         top_k=args.vcd_top_k,
         seed=args.seed,
+    )
+
+    icd_config = ICDConfig(
+        max_new_tokens=args.max_new_tokens,
+        alpha=args.icd_alpha,
+        beta=args.icd_beta,
+        temperature=args.icd_temperature,
+        top_p=args.icd_top_p,
+        top_k=args.icd_top_k,
+        seed=args.seed,
+        disturbance_instruction=args.icd_disturbance_instruction,
     )
 
 
