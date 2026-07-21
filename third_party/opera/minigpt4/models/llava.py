@@ -148,6 +148,8 @@ class LLaVa(BaseModel):
         temperature=1,
         output_attentions=False,
         return_dict_in_generate=False,
+        # Added: needed to retrieve sequences_scores / rollback stats.
+        output_scores=False,
         # ours
         opera_decoding=False,
         key_position=None,
@@ -227,6 +229,7 @@ class LLaVa(BaseModel):
                 images=image,
                 output_attentions=output_attentions,
                 return_dict_in_generate=return_dict_in_generate,
+                output_scores=output_scores,
                 # opera
                 opera_decoding=opera_decoding,
                 key_position=key_position,
