@@ -3310,6 +3310,9 @@ class GenerationMixin:
         beam_next_tokens = None
         beam_idx = None
         rollback_pos = 0
+        # Added for analysis only: track rollback events.
+        rollback_count = 0
+        rollback_positions = []
         max_rollback_time = torch.zeros(window_size)
         history_length = window_size
         reject_token_pos_gather = [[] for _ in range(window_size)]
@@ -3550,6 +3553,9 @@ class GenerationMixin:
                     reject_token_pos_gather[rollback_pos] = reject_token_pos
                     next_token_logits = next_token_logits.scatter_(-1, reject_token_pos, -999.)
                     next_token_logits = next_token_logits.view(batch_size * num_beams, vocab_size)
+                    # Added for analysis only: rollback completed successfully.
+                    rollback_count += 1
+                    rollback_positions.append(int(rollback_pos))
                 else:
                     assert False
             except:
@@ -3650,7 +3656,7 @@ class GenerationMixin:
                 sequence_outputs["sequence_scores"] = None
 
             if self.config.is_encoder_decoder:
-                return BeamSearchEncoderDecoderOutput(
+                ret = BeamSearchEncoderDecoderOutput(
                     sequences=sequence_outputs["sequences"],
                     sequences_scores=sequence_outputs["sequence_scores"],
                     scores=scores,
@@ -3662,7 +3668,7 @@ class GenerationMixin:
                     decoder_hidden_states=decoder_hidden_states,
                 )
             else:
-                return BeamSearchDecoderOnlyOutput(
+                ret = BeamSearchDecoderOnlyOutput(
                     sequences=sequence_outputs["sequences"],
                     sequences_scores=sequence_outputs["sequence_scores"],
                     scores=scores,
@@ -3670,6 +3676,10 @@ class GenerationMixin:
                     attentions=decoder_attentions,
                     hidden_states=decoder_hidden_states,
                 )
+            # Added for analysis only: attach rollback stats to the output object.
+            ret.rollback_count = rollback_count
+            ret.rollback_positions = rollback_positions
+            return ret
         else:
             return sequence_outputs["sequences"]
 
