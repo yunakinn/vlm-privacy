@@ -3333,7 +3333,11 @@ class GenerationMixin:
             current_state = {}
             current_state["input_ids"] = input_ids.clone()
             current_state["beam_scorer"] = copy.deepcopy(beam_scorer)
-            current_state["beam_indices"] = beam_indices.copy() if beam_indices is not None else None
+            # Modified: beam_indices may be a tuple (when output_scores=True),
+            # which has no .copy() method; tuples are immutable so no copy is needed.
+            current_state["beam_indices"] = (
+                beam_indices.copy() if hasattr(beam_indices, "copy") else beam_indices
+            ) if beam_indices is not None else None
             current_state["cur_len"] = cur_len
 
             # prepare model inputs 
