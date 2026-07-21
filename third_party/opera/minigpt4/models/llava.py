@@ -237,11 +237,22 @@ class LLaVa(BaseModel):
             )
 
         input_token_len = input_ids.shape[1]
-        n_diff_input_output = (input_ids != output_ids[:, :input_token_len]).sum().item()
+        # Modified for return_dict_in_generate support.
+        # Original source: OPERA repository (shikiw/OPERA), minigpt4/models/llava.py
+        if return_dict_in_generate:
+            sequences = output_ids.sequences
+        else:
+            sequences = output_ids
+
+        n_diff_input_output = (input_ids != sequences[:, :input_token_len]).sum().item()
         if n_diff_input_output > 0:
             print(f'[Warning] {n_diff_input_output} output_ids are not the same as the input_ids')
-        output_text = self.llama_tokenizer.batch_decode(output_ids[:, input_token_len:], skip_special_tokens=True)
+        output_text = self.llama_tokenizer.batch_decode(sequences[:, input_token_len:], skip_special_tokens=True)
         output_text = [text.split('###')[0].strip() for text in output_text]
+
+        if return_dict_in_generate:
+            # output_ids carries .sequences_scores, .beam_indices, etc.
+            return output_text, output_ids
         return output_text
 
 
