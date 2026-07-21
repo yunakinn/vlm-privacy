@@ -145,6 +145,8 @@ class LLaVa(BaseModel):
         repetition_penalty=1.0,
         length_penalty=1,
         num_captions=1,
+        # Added: retrieve all beams' final sequences/scores for OPERA certainty analysis.
+        num_return_sequences=1,
         temperature=1,
         output_attentions=False,
         return_dict_in_generate=False,
@@ -226,6 +228,7 @@ class LLaVa(BaseModel):
                 # repetition_penalty=repetition_penalty,
                 # length_penalty=length_penalty,
                 # num_return_sequences=num_captions,
+                num_return_sequences=num_return_sequences,
                 images=image,
                 output_attentions=output_attentions,
                 return_dict_in_generate=return_dict_in_generate,
