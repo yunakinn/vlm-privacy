@@ -1,0 +1,123 @@
+{
+  "num_predictions": 1000,
+  "methods": {
+    "icd": {
+      "num_predictions": 1000,
+      "generation_metrics": {
+        "num_scored": 1000,
+        "num_correct": 613,
+        "accuracy": 0.613,
+        "parse_error_count": 9,
+        "avg_token_confidence": 0.7877159070194297,
+        "correct_answer_avg_token_confidence": 0.8781261824435022,
+        "wrong_answer_avg_token_confidence": 0.6445078996939607,
+        "per_class_accuracy": {
+          "asian": 0.8994974874371859,
+          "black": 0.7486033519553073,
+          "indian": 0.4708994708994709,
+          "others": 0.0660377358490566,
+          "white": 0.6238532110091743
+        },
+        "prediction_distribution": {
+          "asian": 266,
+          "black": 273,
+          "indian": 112,
+          "others": 45,
+          "parse error": 9,
+          "white": 295
+        },
+        "confusion_matrix": {
+          "asian": {
+            "asian": 179,
+            "black": 10,
+            "indian": 3,
+            "parse error": 3,
+            "white": 4
+          },
+          "black": {
+            "asian": 7,
+            "black": 134,
+            "indian": 3,
+            "others": 1,
+            "parse error": 4,
+            "white": 30
+          },
+          "indian": {
+            "asian": 40,
+            "black": 33,
+            "indian": 89,
+            "others": 10,
+            "white": 17
+          },
+          "others": {
+            "asian": 13,
+            "black": 42,
+            "indian": 4,
+            "others": 7,
+            "white": 40
+          },
+          "white": {
+            "asian": 27,
+            "black": 54,
+            "indian": 13,
+            "others": 27,
+            "parse error": 2,
+            "white": 204
+          }
+        }
+      },
+      "choice_metrics": {
+        "num_scored": 1000,
+        "num_correct": 700,
+        "accuracy": 0.7,
+        "avg_choice_confidence": 0.5632706234610634,
+        "correct_answer_avg_choice_confidence": 0.6283917460629858,
+        "wrong_answer_avg_choice_confidence": 0.4113213373899098,
+        "avg_ground_truth_probability": 0.49159190846520934,
+        "multiclass_brier_score": 0.43950371833952,
+        "ece_10_bins": 0.15253949358144986,
+        "per_class_accuracy": {
+          "asian": 0.9949748743718593,
+          "black": 0.9720670391061452,
+          "indian": 0.328042328042328,
+          "others": 0.0,
+          "white": 0.8134556574923547
+        },
+        "prediction_distribution": {
+          "asian": 372,
+          "black": 250,
+          "indian": 64,
+          "white": 314
+        },
+        "confusion_matrix": {
+          "asian": {
+            "asian": 198,
+            "black": 1
+          },
+          "black": {
+            "asian": 2,
+            "black": 174,
+            "white": 3
+          },
+          "indian": {
+            "asian": 101,
+            "black": 20,
+            "indian": 62,
+            "white": 6
+          },
+          "others": {
+            "asian": 38,
+            "black": 29,
+            "white": 39
+          },
+          "white": {
+            "asian": 33,
+            "black": 26,
+            "indian": 2,
+            "white": 266
+          }
+        }
+      }
+    }
+  }
+}
