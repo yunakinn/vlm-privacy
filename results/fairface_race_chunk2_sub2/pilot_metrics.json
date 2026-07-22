@@ -1,0 +1,1236 @@
+{
+  "num_predictions": 796,
+  "methods": {
+    "baseline": {
+      "num_predictions": 199,
+      "generation_metrics": {
+        "num_scored": 199,
+        "num_correct": 105,
+        "accuracy": 0.5276381909547738,
+        "parse_error_count": 0,
+        "avg_token_confidence": 0.8630867881578717,
+        "correct_answer_avg_token_confidence": 0.9104333783165802,
+        "wrong_answer_avg_token_confidence": 0.8101996395763352,
+        "per_class_accuracy": {
+          "black": 0.84375,
+          "east asian": 0.9629629629629629,
+          "indian": 0.48484848484848486,
+          "latino hispanic": 0.125,
+          "middle eastern": 0.18518518518518517,
+          "southeast asian": 0.13636363636363635,
+          "white": 0.9230769230769231
+        },
+        "prediction_distribution": {
+          "black": 43,
+          "east asian": 46,
+          "indian": 16,
+          "latino hispanic": 6,
+          "middle eastern": 9,
+          "southeast asian": 4,
+          "white": 75
+        },
+        "confusion_matrix": {
+          "black": {
+            "black": 27,
+            "latino hispanic": 1,
+            "middle eastern": 1,
+            "white": 3
+          },
+          "east asian": {
+            "east asian": 26,
+            "southeast asian": 1
+          },
+          "indian": {
+            "black": 7,
+            "east asian": 1,
+            "indian": 16,
+            "latino hispanic": 1,
+            "white": 8
+          },
+          "latino hispanic": {
+            "black": 6,
+            "east asian": 2,
+            "latino hispanic": 4,
+            "middle eastern": 1,
+            "white": 19
+          },
+          "middle eastern": {
+            "black": 2,
+            "east asian": 1,
+            "middle eastern": 5,
+            "white": 19
+          },
+          "southeast asian": {
+            "east asian": 15,
+            "middle eastern": 2,
+            "southeast asian": 3,
+            "white": 2
+          },
+          "white": {
+            "black": 1,
+            "east asian": 1,
+            "white": 24
+          }
+        }
+      },
+      "choice_metrics": {
+        "num_scored": 199,
+        "num_correct": 111,
+        "accuracy": 0.5577889447236181,
+        "avg_choice_confidence": 0.5150891695949997,
+        "correct_answer_avg_choice_confidence": 0.5801644263906637,
+        "wrong_answer_avg_choice_confidence": 0.433005607045923,
+        "avg_ground_truth_probability": 0.37265085300172757,
+        "multiclass_brier_score": 0.6079715108170155,
+        "ece_10_bins": 0.06652538913597328,
+        "per_class_accuracy": {
+          "black": 0.78125,
+          "east asian": 0.9629629629629629,
+          "indian": 0.45454545454545453,
+          "latino hispanic": 0.3125,
+          "middle eastern": 0.14814814814814814,
+          "southeast asian": 0.2727272727272727,
+          "white": 0.9615384615384616
+        },
+        "prediction_distribution": {
+          "black": 29,
+          "east asian": 44,
+          "indian": 16,
+          "latino hispanic": 13,
+          "middle eastern": 8,
+          "southeast asian": 9,
+          "white": 80
+        },
+        "confusion_matrix": {
+          "black": {
+            "black": 25,
+            "latino hispanic": 1,
+            "middle eastern": 1,
+            "white": 5
+          },
+          "east asian": {
+            "east asian": 26,
+            "southeast asian": 1
+          },
+          "indian": {
+            "black": 4,
+            "indian": 15,
+            "latino hispanic": 2,
+            "southeast asian": 1,
+            "white": 11
+          },
+          "latino hispanic": {
+            "east asian": 3,
+            "latino hispanic": 10,
+            "middle eastern": 1,
+            "southeast asian": 1,
+            "white": 17
+          },
+          "middle eastern": {
+            "east asian": 2,
+            "indian": 1,
+            "middle eastern": 4,
+            "white": 20
+          },
+          "southeast asian": {
+            "east asian": 12,
+            "middle eastern": 2,
+            "southeast asian": 6,
+            "white": 2
+          },
+          "white": {
+            "east asian": 1,
+            "white": 25
+          }
+        }
+      }
+    },
+    "vcd": {
+      "num_predictions": 199,
+      "generation_metrics": {
+        "num_scored": 199,
+        "num_correct": 108,
+        "accuracy": 0.542713567839196,
+        "parse_error_count": 1,
+        "avg_token_confidence": 0.907327338981238,
+        "correct_answer_avg_token_confidence": 0.9616561236443503,
+        "wrong_answer_avg_token_confidence": 0.8428492209195217,
+        "per_class_accuracy": {
+          "black": 0.6875,
+          "east asian": 0.9629629629629629,
+          "indian": 0.45454545454545453,
+          "latino hispanic": 0.34375,
+          "middle eastern": 0.25925925925925924,
+          "southeast asian": 0.22727272727272727,
+          "white": 0.8461538461538461
+        },
+        "prediction_distribution": {
+          "black": 34,
+          "east asian": 46,
+          "indian": 16,
+          "latino hispanic": 15,
+          "middle eastern": 16,
+          "parse error": 1,
+          "southeast asian": 7,
+          "white": 64
+        },
+        "confusion_matrix": {
+          "black": {
+            "black": 22,
+            "east asian": 1,
+            "latino hispanic": 1,
+            "middle eastern": 1,
+            "white": 7
+          },
+          "east asian": {
+            "east asian": 26,
+            "southeast asian": 1
+          },
+          "indian": {
+            "black": 4,
+            "east asian": 2,
+            "indian": 15,
+            "latino hispanic": 2,
+            "parse error": 1,
+            "white": 9
+          },
+          "latino hispanic": {
+            "black": 3,
+            "east asian": 3,
+            "latino hispanic": 11,
+            "middle eastern": 5,
+            "white": 10
+          },
+          "middle eastern": {
+            "black": 3,
+            "east asian": 1,
+            "middle eastern": 7,
+            "southeast asian": 1,
+            "white": 15
+          },
+          "southeast asian": {
+            "east asian": 12,
+            "indian": 1,
+            "latino hispanic": 1,
+            "middle eastern": 2,
+            "southeast asian": 5,
+            "white": 1
+          },
+          "white": {
+            "black": 2,
+            "east asian": 1,
+            "middle eastern": 1,
+            "white": 22
+          }
+        }
+      },
+      "choice_metrics": {
+        "num_scored": 199,
+        "num_correct": 111,
+        "accuracy": 0.5577889447236181,
+        "avg_choice_confidence": 0.6416730533789632,
+        "correct_answer_avg_choice_confidence": 0.7215600152364948,
+        "wrong_answer_avg_choice_confidence": 0.5409065446723044,
+        "avg_ground_truth_probability": 0.4500224491695551,
+        "multiclass_brier_score": 0.6107058785053502,
+        "ece_10_bins": 0.1319686372070003,
+        "per_class_accuracy": {
+          "black": 0.625,
+          "east asian": 0.9629629629629629,
+          "indian": 0.45454545454545453,
+          "latino hispanic": 0.46875,
+          "middle eastern": 0.2222222222222222,
+          "southeast asian": 0.2727272727272727,
+          "white": 0.8846153846153846
+        },
+        "prediction_distribution": {
+          "black": 26,
+          "east asian": 41,
+          "indian": 17,
+          "latino hispanic": 21,
+          "middle eastern": 13,
+          "southeast asian": 10,
+          "white": 71
+        },
+        "confusion_matrix": {
+          "black": {
+            "black": 20,
+            "latino hispanic": 3,
+            "middle eastern": 1,
+            "white": 8
+          },
+          "east asian": {
+            "east asian": 26,
+            "southeast asian": 1
+          },
+          "indian": {
+            "black": 5,
+            "indian": 15,
+            "latino hispanic": 3,
+            "southeast asian": 2,
+            "white": 8
+          },
+          "latino hispanic": {
+            "east asian": 2,
+            "indian": 1,
+            "latino hispanic": 15,
+            "middle eastern": 2,
+            "southeast asian": 1,
+            "white": 11
+          },
+          "middle eastern": {
+            "east asian": 2,
+            "indian": 1,
+            "middle eastern": 6,
+            "white": 18
+          },
+          "southeast asian": {
+            "east asian": 10,
+            "middle eastern": 3,
+            "southeast asian": 6,
+            "white": 3
+          },
+          "white": {
+            "black": 1,
+            "east asian": 1,
+            "middle eastern": 1,
+            "white": 23
+          }
+        }
+      }
+    },
+    "icd": {
+      "num_predictions": 199,
+      "generation_metrics": {
+        "num_scored": 199,
+        "num_correct": 93,
+        "accuracy": 0.46733668341708545,
+        "parse_error_count": 6,
+        "avg_token_confidence": 0.8290079099876164,
+        "correct_answer_avg_token_confidence": 0.9140908034566763,
+        "wrong_answer_avg_token_confidence": 0.7543597110006105,
+        "per_class_accuracy": {
+          "black": 0.75,
+          "east asian": 0.9259259259259259,
+          "indian": 0.3939393939393939,
+          "latino hispanic": 0.1875,
+          "middle eastern": 0.18518518518518517,
+          "southeast asian": 0.13636363636363635,
+          "white": 0.6538461538461539
+        },
+        "prediction_distribution": {
+          "black": 41,
+          "east asian": 44,
+          "indian": 15,
+          "latino hispanic": 11,
+          "middle eastern": 13,
+          "parse error": 6,
+          "southeast asian": 4,
+          "white": 65
+        },
+        "confusion_matrix": {
+          "black": {
+            "black": 24,
+            "east asian": 1,
+            "latino hispanic": 1,
+            "middle eastern": 2,
+            "white": 4
+          },
+          "east asian": {
+            "east asian": 25,
+            "southeast asian": 1,
+            "white": 1
+          },
+          "indian": {
+            "black": 5,
+            "east asian": 3,
+            "indian": 13,
+            "latino hispanic": 2,
+            "middle eastern": 1,
+            "parse error": 2,
+            "white": 7
+          },
+          "latino hispanic": {
+            "black": 7,
+            "indian": 2,
+            "latino hispanic": 6,
+            "parse error": 1,
+            "white": 16
+          },
+          "middle eastern": {
+            "black": 1,
+            "east asian": 1,
+            "middle eastern": 5,
+            "parse error": 1,
+            "white": 19
+          },
+          "southeast asian": {
+            "black": 1,
+            "east asian": 12,
+            "latino hispanic": 2,
+            "middle eastern": 2,
+            "parse error": 1,
+            "southeast asian": 3,
+            "white": 1
+          },
+          "white": {
+            "black": 3,
+            "east asian": 2,
+            "middle eastern": 3,
+            "parse error": 1,
+            "white": 17
+          }
+        }
+      },
+      "choice_metrics": {
+        "num_scored": 199,
+        "num_correct": 109,
+        "accuracy": 0.5477386934673367,
+        "avg_choice_confidence": 0.5987939077330764,
+        "correct_answer_avg_choice_confidence": 0.6865948480116751,
+        "wrong_answer_avg_choice_confidence": 0.4924572133956622,
+        "avg_ground_truth_probability": 0.4242753788801433,
+        "multiclass_brier_score": 0.6145013966817773,
+        "ece_10_bins": 0.07923952755218265,
+        "per_class_accuracy": {
+          "black": 0.78125,
+          "east asian": 0.9629629629629629,
+          "indian": 0.42424242424242425,
+          "latino hispanic": 0.3125,
+          "middle eastern": 0.14814814814814814,
+          "southeast asian": 0.22727272727272727,
+          "white": 0.9615384615384616
+        },
+        "prediction_distribution": {
+          "black": 30,
+          "east asian": 47,
+          "indian": 15,
+          "latino hispanic": 13,
+          "middle eastern": 8,
+          "southeast asian": 9,
+          "white": 77
+        },
+        "confusion_matrix": {
+          "black": {
+            "black": 25,
+            "east asian": 1,
+            "latino hispanic": 1,
+            "middle eastern": 1,
+            "white": 4
+          },
+          "east asian": {
+            "east asian": 26,
+            "southeast asian": 1
+          },
+          "indian": {
+            "black": 4,
+            "indian": 14,
+            "latino hispanic": 2,
+            "southeast asian": 2,
+            "white": 11
+          },
+          "latino hispanic": {
+            "black": 1,
+            "east asian": 4,
+            "latino hispanic": 10,
+            "middle eastern": 1,
+            "southeast asian": 1,
+            "white": 15
+          },
+          "middle eastern": {
+            "east asian": 2,
+            "indian": 1,
+            "middle eastern": 4,
+            "white": 20
+          },
+          "southeast asian": {
+            "east asian": 13,
+            "middle eastern": 2,
+            "southeast asian": 5,
+            "white": 2
+          },
+          "white": {
+            "east asian": 1,
+            "white": 25
+          }
+        }
+      }
+    },
+    "m3id": {
+      "num_predictions": 199,
+      "generation_metrics": {
+        "num_scored": 199,
+        "num_correct": 105,
+        "accuracy": 0.5276381909547738,
+        "parse_error_count": 0,
+        "avg_token_confidence": 0.8630867881578717,
+        "correct_answer_avg_token_confidence": 0.9104333783165802,
+        "wrong_answer_avg_token_confidence": 0.8101996395763352,
+        "per_class_accuracy": {
+          "black": 0.84375,
+          "east asian": 0.9629629629629629,
+          "indian": 0.48484848484848486,
+          "latino hispanic": 0.125,
+          "middle eastern": 0.18518518518518517,
+          "southeast asian": 0.13636363636363635,
+          "white": 0.9230769230769231
+        },
+        "prediction_distribution": {
+          "black": 43,
+          "east asian": 46,
+          "indian": 16,
+          "latino hispanic": 6,
+          "middle eastern": 9,
+          "southeast asian": 4,
+          "white": 75
+        },
+        "confusion_matrix": {
+          "black": {
+            "black": 27,
+            "latino hispanic": 1,
+            "middle eastern": 1,
+            "white": 3
+          },
+          "east asian": {
+            "east asian": 26,
+            "southeast asian": 1
+          },
+          "indian": {
+            "black": 7,
+            "east asian": 1,
+            "indian": 16,
+            "latino hispanic": 1,
+            "white": 8
+          },
+          "latino hispanic": {
+            "black": 6,
+            "east asian": 2,
+            "latino hispanic": 4,
+            "middle eastern": 1,
+            "white": 19
+          },
+          "middle eastern": {
+            "black": 2,
+            "east asian": 1,
+            "middle eastern": 5,
+            "white": 19
+          },
+          "southeast asian": {
+            "east asian": 15,
+            "middle eastern": 2,
+            "southeast asian": 3,
+            "white": 2
+          },
+          "white": {
+            "black": 1,
+            "east asian": 1,
+            "white": 24
+          }
+        }
+      },
+      "choice_metrics": {
+        "num_scored": 199,
+        "num_correct": 108,
+        "accuracy": 0.542713567839196,
+        "avg_choice_confidence": 0.6121349652634527,
+        "correct_answer_avg_choice_confidence": 0.7080736218642819,
+        "wrong_answer_avg_choice_confidence": 0.498273702484446,
+        "avg_ground_truth_probability": 0.43486088202029155,
+        "multiclass_brier_score": 0.6070371616713301,
+        "ece_10_bins": 0.10188698288229954,
+        "per_class_accuracy": {
+          "black": 0.6875,
+          "east asian": 0.9629629629629629,
+          "indian": 0.45454545454545453,
+          "latino hispanic": 0.3125,
+          "middle eastern": 0.14814814814814814,
+          "southeast asian": 0.2727272727272727,
+          "white": 0.9615384615384616
+        },
+        "prediction_distribution": {
+          "black": 26,
+          "east asian": 45,
+          "indian": 16,
+          "latino hispanic": 14,
+          "middle eastern": 8,
+          "southeast asian": 9,
+          "white": 81
+        },
+        "confusion_matrix": {
+          "black": {
+            "black": 22,
+            "latino hispanic": 2,
+            "middle eastern": 1,
+            "white": 7
+          },
+          "east asian": {
+            "east asian": 26,
+            "southeast asian": 1
+          },
+          "indian": {
+            "black": 4,
+            "indian": 15,
+            "latino hispanic": 2,
+            "southeast asian": 1,
+            "white": 11
+          },
+          "latino hispanic": {
+            "east asian": 4,
+            "latino hispanic": 10,
+            "middle eastern": 1,
+            "southeast asian": 1,
+            "white": 16
+          },
+          "middle eastern": {
+            "east asian": 2,
+            "indian": 1,
+            "middle eastern": 4,
+            "white": 20
+          },
+          "southeast asian": {
+            "east asian": 12,
+            "middle eastern": 2,
+            "southeast asian": 6,
+            "white": 2
+          },
+          "white": {
+            "east asian": 1,
+            "white": 25
+          }
+        }
+      }
+    }
+  },
+  "generation_paired_comparison": {
+    "num_paired_examples": 199,
+    "prediction_changed_count": 46,
+    "prediction_changed_rate": 0.23115577889447236,
+    "both_correct": 94,
+    "baseline_only_correct": 11,
+    "vcd_only_correct": 14,
+    "both_wrong": 80,
+    "net_vcd_correct_gain": 3,
+    "changed_examples": [
+      {
+        "id": "fairface_race_13692",
+        "answer": "latino hispanic",
+        "baseline_prediction": "white",
+        "vcd_prediction": "black",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_15260",
+        "answer": "indian",
+        "baseline_prediction": "indian",
+        "vcd_prediction": "white",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_16983",
+        "answer": "white",
+        "baseline_prediction": "white",
+        "vcd_prediction": "black",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_20950",
+        "answer": "southeast asian",
+        "baseline_prediction": "white",
+        "vcd_prediction": "latino hispanic",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_21134",
+        "answer": "latino hispanic",
+        "baseline_prediction": "black",
+        "vcd_prediction": "middle eastern",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_21289",
+        "answer": "black",
+        "baseline_prediction": "black",
+        "vcd_prediction": "white",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_24296",
+        "answer": "black",
+        "baseline_prediction": "white",
+        "vcd_prediction": "black",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "fairface_race_26663",
+        "answer": "indian",
+        "baseline_prediction": "white",
+        "vcd_prediction": "east asian",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_2675",
+        "answer": "middle eastern",
+        "baseline_prediction": "white",
+        "vcd_prediction": "middle eastern",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "fairface_race_29830",
+        "answer": "latino hispanic",
+        "baseline_prediction": "black",
+        "vcd_prediction": "east asian",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_30238",
+        "answer": "latino hispanic",
+        "baseline_prediction": "white",
+        "vcd_prediction": "middle eastern",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_30471",
+        "answer": "latino hispanic",
+        "baseline_prediction": "white",
+        "vcd_prediction": "middle eastern",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_31893",
+        "answer": "middle eastern",
+        "baseline_prediction": "black",
+        "vcd_prediction": "southeast asian",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_31927",
+        "answer": "black",
+        "baseline_prediction": "black",
+        "vcd_prediction": "white",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_32854",
+        "answer": "black",
+        "baseline_prediction": "black",
+        "vcd_prediction": "white",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_33357",
+        "answer": "latino hispanic",
+        "baseline_prediction": "black",
+        "vcd_prediction": "latino hispanic",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "fairface_race_35821",
+        "answer": "black",
+        "baseline_prediction": "black",
+        "vcd_prediction": "white",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_36602",
+        "answer": "black",
+        "baseline_prediction": "black",
+        "vcd_prediction": "white",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_41511",
+        "answer": "latino hispanic",
+        "baseline_prediction": "white",
+        "vcd_prediction": "black",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_44524",
+        "answer": "white",
+        "baseline_prediction": "white",
+        "vcd_prediction": "middle eastern",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_47114",
+        "answer": "indian",
+        "baseline_prediction": "black",
+        "vcd_prediction": "latino hispanic",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_47880",
+        "answer": "southeast asian",
+        "baseline_prediction": "east asian",
+        "vcd_prediction": "southeast asian",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "fairface_race_53060",
+        "answer": "latino hispanic",
+        "baseline_prediction": "white",
+        "vcd_prediction": "latino hispanic",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "fairface_race_55527",
+        "answer": "latino hispanic",
+        "baseline_prediction": "white",
+        "vcd_prediction": "latino hispanic",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "fairface_race_5609",
+        "answer": "indian",
+        "baseline_prediction": "indian",
+        "vcd_prediction": "east asian",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_5754",
+        "answer": "latino hispanic",
+        "baseline_prediction": "white",
+        "vcd_prediction": "east asian",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_58655",
+        "answer": "black",
+        "baseline_prediction": "white",
+        "vcd_prediction": "east asian",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_58979",
+        "answer": "latino hispanic",
+        "baseline_prediction": "white",
+        "vcd_prediction": "black",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_60603",
+        "answer": "latino hispanic",
+        "baseline_prediction": "black",
+        "vcd_prediction": "white",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_62933",
+        "answer": "indian",
+        "baseline_prediction": "black",
+        "vcd_prediction": "parse error",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_64377",
+        "answer": "indian",
+        "baseline_prediction": "indian",
+        "vcd_prediction": "white",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_64710",
+        "answer": "latino hispanic",
+        "baseline_prediction": "black",
+        "vcd_prediction": "middle eastern",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_68390",
+        "answer": "latino hispanic",
+        "baseline_prediction": "black",
+        "vcd_prediction": "latino hispanic",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "fairface_race_71565",
+        "answer": "middle eastern",
+        "baseline_prediction": "white",
+        "vcd_prediction": "middle eastern",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "fairface_race_74594",
+        "answer": "middle eastern",
+        "baseline_prediction": "white",
+        "vcd_prediction": "black",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_7976",
+        "answer": "black",
+        "baseline_prediction": "black",
+        "vcd_prediction": "white",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_7984",
+        "answer": "southeast asian",
+        "baseline_prediction": "east asian",
+        "vcd_prediction": "indian",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_80962",
+        "answer": "southeast asian",
+        "baseline_prediction": "east asian",
+        "vcd_prediction": "southeast asian",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "fairface_race_8239",
+        "answer": "latino hispanic",
+        "baseline_prediction": "white",
+        "vcd_prediction": "latino hispanic",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "fairface_race_86250",
+        "answer": "latino hispanic",
+        "baseline_prediction": "east asian",
+        "vcd_prediction": "white",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_86896",
+        "answer": "latino hispanic",
+        "baseline_prediction": "white",
+        "vcd_prediction": "latino hispanic",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "fairface_race_88895",
+        "answer": "indian",
+        "baseline_prediction": "east asian",
+        "vcd_prediction": "white",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_89724",
+        "answer": "indian",
+        "baseline_prediction": "white",
+        "vcd_prediction": "indian",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "fairface_race_9149",
+        "answer": "middle eastern",
+        "baseline_prediction": "white",
+        "vcd_prediction": "black",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_95788",
+        "answer": "indian",
+        "baseline_prediction": "black",
+        "vcd_prediction": "indian",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "fairface_race_95994",
+        "answer": "latino hispanic",
+        "baseline_prediction": "white",
+        "vcd_prediction": "latino hispanic",
+        "baseline_correct": false,
+        "vcd_correct": true
+      }
+    ]
+  },
+  "choice_paired_comparison": {
+    "num_paired_examples": 199,
+    "prediction_changed_count": 30,
+    "prediction_changed_rate": 0.1507537688442211,
+    "both_correct": 101,
+    "baseline_only_correct": 10,
+    "vcd_only_correct": 10,
+    "both_wrong": 78,
+    "net_vcd_correct_gain": 0,
+    "changed_examples": [
+      {
+        "id": "fairface_race_12243",
+        "answer": "southeast asian",
+        "baseline_prediction": "east asian",
+        "vcd_prediction": "middle eastern",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_13692",
+        "answer": "latino hispanic",
+        "baseline_prediction": "east asian",
+        "vcd_prediction": "latino hispanic",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "fairface_race_15273",
+        "answer": "southeast asian",
+        "baseline_prediction": "east asian",
+        "vcd_prediction": "southeast asian",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "fairface_race_1989",
+        "answer": "white",
+        "baseline_prediction": "white",
+        "vcd_prediction": "black",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_20950",
+        "answer": "southeast asian",
+        "baseline_prediction": "white",
+        "vcd_prediction": "east asian",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_21251",
+        "answer": "middle eastern",
+        "baseline_prediction": "white",
+        "vcd_prediction": "middle eastern",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "fairface_race_22520",
+        "answer": "latino hispanic",
+        "baseline_prediction": "latino hispanic",
+        "vcd_prediction": "white",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_23951",
+        "answer": "black",
+        "baseline_prediction": "black",
+        "vcd_prediction": "white",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_2675",
+        "answer": "middle eastern",
+        "baseline_prediction": "white",
+        "vcd_prediction": "middle eastern",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "fairface_race_30238",
+        "answer": "latino hispanic",
+        "baseline_prediction": "white",
+        "vcd_prediction": "middle eastern",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_31927",
+        "answer": "black",
+        "baseline_prediction": "black",
+        "vcd_prediction": "white",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_32854",
+        "answer": "black",
+        "baseline_prediction": "black",
+        "vcd_prediction": "white",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_35821",
+        "answer": "black",
+        "baseline_prediction": "black",
+        "vcd_prediction": "latino hispanic",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_3691",
+        "answer": "latino hispanic",
+        "baseline_prediction": "white",
+        "vcd_prediction": "latino hispanic",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "fairface_race_44489",
+        "answer": "southeast asian",
+        "baseline_prediction": "southeast asian",
+        "vcd_prediction": "east asian",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_44524",
+        "answer": "white",
+        "baseline_prediction": "white",
+        "vcd_prediction": "middle eastern",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_47114",
+        "answer": "indian",
+        "baseline_prediction": "white",
+        "vcd_prediction": "latino hispanic",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_47880",
+        "answer": "southeast asian",
+        "baseline_prediction": "east asian",
+        "vcd_prediction": "southeast asian",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "fairface_race_53060",
+        "answer": "latino hispanic",
+        "baseline_prediction": "white",
+        "vcd_prediction": "east asian",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_58655",
+        "answer": "black",
+        "baseline_prediction": "white",
+        "vcd_prediction": "latino hispanic",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_64710",
+        "answer": "latino hispanic",
+        "baseline_prediction": "white",
+        "vcd_prediction": "indian",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_7976",
+        "answer": "black",
+        "baseline_prediction": "black",
+        "vcd_prediction": "white",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_7984",
+        "answer": "southeast asian",
+        "baseline_prediction": "southeast asian",
+        "vcd_prediction": "white",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_80969",
+        "answer": "southeast asian",
+        "baseline_prediction": "east asian",
+        "vcd_prediction": "white",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_8239",
+        "answer": "latino hispanic",
+        "baseline_prediction": "white",
+        "vcd_prediction": "latino hispanic",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "fairface_race_89724",
+        "answer": "indian",
+        "baseline_prediction": "white",
+        "vcd_prediction": "southeast asian",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_94150",
+        "answer": "latino hispanic",
+        "baseline_prediction": "white",
+        "vcd_prediction": "latino hispanic",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "fairface_race_95788",
+        "answer": "indian",
+        "baseline_prediction": "white",
+        "vcd_prediction": "black",
+        "baseline_correct": false,
+        "vcd_correct": false
+      },
+      {
+        "id": "fairface_race_95994",
+        "answer": "latino hispanic",
+        "baseline_prediction": "east asian",
+        "vcd_prediction": "latino hispanic",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "fairface_race_9862",
+        "answer": "latino hispanic",
+        "baseline_prediction": "white",
+        "vcd_prediction": "latino hispanic",
+        "baseline_correct": false,
+        "vcd_correct": true
+      }
+    ]
+  }
+}
