@@ -1,0 +1,86 @@
+{
+  "num_predictions": 600,
+  "methods": {
+    "icd": {
+      "num_predictions": 600,
+      "generation_metrics": {
+        "num_scored": 600,
+        "num_correct": 253,
+        "accuracy": 0.4216666666666667,
+        "parse_error_count": 7,
+        "avg_token_confidence": 0.7973218766230502,
+        "correct_answer_avg_token_confidence": 0.8223743703662958,
+        "wrong_answer_avg_token_confidence": 0.7790559373808571,
+        "per_class_accuracy": {
+          "middle aged": 0.3283582089552239,
+          "older": 0.25773195876288657,
+          "young": 0.6682926829268293
+        },
+        "prediction_distribution": {
+          "middle aged": 201,
+          "older": 89,
+          "parse error": 7,
+          "young": 303
+        },
+        "confusion_matrix": {
+          "middle aged": {
+            "middle aged": 66,
+            "older": 24,
+            "parse error": 1,
+            "young": 110
+          },
+          "older": {
+            "middle aged": 83,
+            "older": 50,
+            "parse error": 5,
+            "young": 56
+          },
+          "young": {
+            "middle aged": 52,
+            "older": 15,
+            "parse error": 1,
+            "young": 137
+          }
+        }
+      },
+      "choice_metrics": {
+        "num_scored": 600,
+        "num_correct": 269,
+        "accuracy": 0.4483333333333333,
+        "avg_choice_confidence": 0.4499985899466909,
+        "correct_answer_avg_choice_confidence": 0.48288025135339924,
+        "wrong_answer_avg_choice_confidence": 0.42327603128081565,
+        "avg_ground_truth_probability": 0.3838247699776752,
+        "multiclass_brier_score": 0.5995490647663497,
+        "ece_10_bins": 0.11156530556702227,
+        "per_class_accuracy": {
+          "middle aged": 0.30845771144278605,
+          "older": 0.09278350515463918,
+          "young": 0.9219512195121952
+        },
+        "prediction_distribution": {
+          "middle aged": 201,
+          "older": 24,
+          "young": 375
+        },
+        "confusion_matrix": {
+          "middle aged": {
+            "middle aged": 62,
+            "older": 4,
+            "young": 135
+          },
+          "older": {
+            "middle aged": 125,
+            "older": 18,
+            "young": 51
+          },
+          "young": {
+            "middle aged": 14,
+            "older": 2,
+            "young": 189
+          }
+        }
+      }
+    }
+  }
+}
