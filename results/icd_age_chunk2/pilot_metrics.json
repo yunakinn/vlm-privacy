@@ -1,0 +1,94 @@
+{
+  "num_predictions": 1000,
+  "methods": {
+    "icd": {
+      "num_predictions": 1000,
+      "generation_metrics": {
+        "num_scored": 1000,
+        "num_correct": 646,
+        "accuracy": 0.646,
+        "parse_error_count": 16,
+        "avg_token_confidence": 0.8676469587921859,
+        "correct_answer_avg_token_confidence": 0.8921691079194433,
+        "wrong_answer_avg_token_confidence": 0.8228975002153286,
+        "per_class_accuracy": {
+          "child": 0.8505747126436781,
+          "middle aged adult": 0.7395833333333334,
+          "older adult": 0.41329479768786126
+        },
+        "prediction_distribution": {
+          "child": 149,
+          "middle aged adult": 550,
+          "older adult": 204,
+          "parse error": 16,
+          "teen": 19,
+          "young adult": 62
+        },
+        "confusion_matrix": {
+          "child": {
+            "child": 148,
+            "middle aged adult": 5,
+            "older adult": 2,
+            "parse error": 1,
+            "teen": 9,
+            "young adult": 9
+          },
+          "middle aged adult": {
+            "middle aged adult": 355,
+            "older adult": 59,
+            "parse error": 10,
+            "teen": 6,
+            "young adult": 50
+          },
+          "older adult": {
+            "child": 1,
+            "middle aged adult": 190,
+            "older adult": 143,
+            "parse error": 5,
+            "teen": 4,
+            "young adult": 3
+          }
+        }
+      },
+      "choice_metrics": {
+        "num_scored": 1000,
+        "num_correct": 753,
+        "accuracy": 0.753,
+        "avg_choice_confidence": 0.6221920478006528,
+        "correct_answer_avg_choice_confidence": 0.6456219822152003,
+        "wrong_answer_avg_choice_confidence": 0.5507639481482031,
+        "avg_ground_truth_probability": 0.5668245513986846,
+        "multiclass_brier_score": 0.37323996678671567,
+        "ece_10_bins": 0.13497078906397353,
+        "per_class_accuracy": {
+          "child": 0.9885057471264368,
+          "middle aged adult": 0.5708333333333333,
+          "older adult": 0.8872832369942196
+        },
+        "prediction_distribution": {
+          "child": 172,
+          "middle aged adult": 313,
+          "older adult": 496,
+          "teen": 1,
+          "young adult": 18
+        },
+        "confusion_matrix": {
+          "child": {
+            "child": 172,
+            "older adult": 1,
+            "teen": 1
+          },
+          "middle aged adult": {
+            "middle aged adult": 274,
+            "older adult": 188,
+            "young adult": 18
+          },
+          "older adult": {
+            "middle aged adult": 39,
+            "older adult": 307
+          }
+        }
+      }
+    }
+  }
+}
