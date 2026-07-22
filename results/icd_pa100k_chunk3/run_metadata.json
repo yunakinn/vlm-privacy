@@ -1,0 +1,74 @@
+{
+  "created_at_utc": "2026-07-22T05:51:53.508791+00:00",
+  "status": "completed",
+  "git_commit": "fe95e33ead07de2378d8f8eaf60346fbcaf684ee",
+  "model": {
+    "model_id": "llava-hf/llava-1.5-7b-hf",
+    "device": "cuda",
+    "dtype": "torch.float16",
+    "load_in_4bit": false,
+    "processor_use_fast": false
+  },
+  "experiment": {
+    "methods": [
+      "icd"
+    ],
+    "num_examples": 600,
+    "num_expected_predictions": 600,
+    "num_saved_predictions": 600,
+    "max_new_tokens": 64,
+    "seed": 42,
+    "annotations_path": "/content/vlm-privacy/data/pa100k/chunk3.json",
+    "annotations_sha256": "a66c40f481275d6662cd07fd854e732cbbb5e22870952a4457fa544656a64e78",
+    "image_dir": "/content",
+    "resume_enabled": false
+  },
+  "method_implementations": {
+    "baseline": {
+      "name": "llava_greedy_baseline"
+    },
+    "vcd": {
+      "name": "official_vcd_algorithm_huggingface_port",
+      "official_vcd_reproduction": true,
+      "description": "Official VCD algorithm port using diffusion noise, independent clean/distorted KV caches, and the Adaptive Plausibility Constraint.",
+      "formula": "(1 + alpha) * clean_logits - alpha * distorted_logits",
+      "alpha": 1.0,
+      "beta": 0.1,
+      "distortion": "diffusion_noise",
+      "noise_step": 500,
+      "temperature": 1.0,
+      "top_p": 1.0,
+      "top_k": 0,
+      "distortion_seed": 42
+    },
+    "icd": {
+      "name": "icd_algorithm_huggingface_port",
+      "exact_official_reproduction": false,
+      "description": "Instruction contrastive decoding using normal and disturbance instructions with APC.",
+      "formula": "(1 + alpha) * normal_logits - alpha * disturbed_logits",
+      "alpha": 1.0,
+      "beta": 0.1,
+      "temperature": 1.0,
+      "top_p": 1.0,
+      "top_k": 0,
+      "disturbance_instruction": "You are a confused object detector who provides only a vague and incomplete impression of the image."
+    }
+  },
+  "choice_scoring": {
+    "method": "balanced_cyclic_permutation_letter_probability",
+    "num_permutations": 3,
+    "probability_interpretation": "Conditional probability over option-letter tokens after cyclic position balancing."
+  },
+  "dataset": null,
+  "environment": {
+    "python": "3.11.13",
+    "platform": "Linux-6.6.122+-x86_64-with-glibc2.35",
+    "torch": "2.6.0+cu124",
+    "transformers": "4.53.2",
+    "accelerate": "1.8.1",
+    "bitsandbytes": null,
+    "cuda_available": true,
+    "cuda_version": "12.4",
+    "gpu_name": "NVIDIA L4"
+  }
+}

@@ -1,0 +1,84 @@
+{
+  "num_predictions": 600,
+  "methods": {
+    "icd": {
+      "num_predictions": 600,
+      "generation_metrics": {
+        "num_scored": 600,
+        "num_correct": 226,
+        "accuracy": 0.37666666666666665,
+        "parse_error_count": 6,
+        "avg_token_confidence": 0.7951512765705473,
+        "correct_answer_avg_token_confidence": 0.8220252505720629,
+        "wrong_answer_avg_token_confidence": 0.778911923296904,
+        "per_class_accuracy": {
+          "middle aged": 0.32460732984293195,
+          "older": 0.215311004784689,
+          "young": 0.595
+        },
+        "prediction_distribution": {
+          "middle aged": 219,
+          "older": 100,
+          "parse error": 6,
+          "young": 275
+        },
+        "confusion_matrix": {
+          "middle aged": {
+            "middle aged": 62,
+            "older": 37,
+            "parse error": 3,
+            "young": 89
+          },
+          "older": {
+            "middle aged": 94,
+            "older": 45,
+            "parse error": 3,
+            "young": 67
+          },
+          "young": {
+            "middle aged": 63,
+            "older": 18,
+            "young": 119
+          }
+        }
+      },
+      "choice_metrics": {
+        "num_scored": 600,
+        "num_correct": 267,
+        "accuracy": 0.445,
+        "avg_choice_confidence": 0.4485101984310869,
+        "correct_answer_avg_choice_confidence": 0.4751427072462268,
+        "wrong_answer_avg_choice_confidence": 0.42715620487660616,
+        "avg_ground_truth_probability": 0.3742136765184345,
+        "multiclass_brier_score": 0.6177193220156755,
+        "ece_10_bins": 0.08602340919672138,
+        "per_class_accuracy": {
+          "middle aged": 0.3507853403141361,
+          "older": 0.06220095693779904,
+          "young": 0.935
+        },
+        "prediction_distribution": {
+          "middle aged": 200,
+          "older": 15,
+          "young": 385
+        },
+        "confusion_matrix": {
+          "middle aged": {
+            "middle aged": 67,
+            "older": 2,
+            "young": 122
+          },
+          "older": {
+            "middle aged": 120,
+            "older": 13,
+            "young": 76
+          },
+          "young": {
+            "middle aged": 13,
+            "young": 187
+          }
+        }
+      }
+    }
+  }
+}
