@@ -1,0 +1,583 @@
+{
+  "num_predictions": 600,
+  "methods": {
+    "baseline": {
+      "num_predictions": 150,
+      "generation_metrics": {
+        "num_scored": 150,
+        "num_correct": 88,
+        "accuracy": 0.5866666666666667,
+        "parse_error_count": 0,
+        "avg_token_confidence": 0.9351464828848837,
+        "correct_answer_avg_token_confidence": 0.9476067007829752,
+        "wrong_answer_avg_token_confidence": 0.9174610123198519,
+        "per_class_accuracy": {
+          "female": 1.0,
+          "male": 0.06060606060606061
+        },
+        "prediction_distribution": {
+          "female": 146,
+          "male": 4
+        },
+        "confusion_matrix": {
+          "female": {
+            "female": 84
+          },
+          "male": {
+            "female": 62,
+            "male": 4
+          }
+        }
+      },
+      "choice_metrics": {
+        "num_scored": 150,
+        "num_correct": 93,
+        "accuracy": 0.62,
+        "avg_choice_confidence": 0.5851988061121238,
+        "correct_answer_avg_choice_confidence": 0.6023274643328622,
+        "wrong_answer_avg_choice_confidence": 0.557252047962498,
+        "avg_ground_truth_probability": 0.5416872496606254,
+        "multiclass_brier_score": 0.4365671705423809,
+        "ece_10_bins": 0.12282882520414423,
+        "per_class_accuracy": {
+          "female": 1.0,
+          "male": 0.13636363636363635
+        },
+        "prediction_distribution": {
+          "female": 141,
+          "male": 9
+        },
+        "confusion_matrix": {
+          "female": {
+            "female": 84
+          },
+          "male": {
+            "female": 57,
+            "male": 9
+          }
+        }
+      }
+    },
+    "vcd": {
+      "num_predictions": 150,
+      "generation_metrics": {
+        "num_scored": 150,
+        "num_correct": 93,
+        "accuracy": 0.62,
+        "parse_error_count": 0,
+        "avg_token_confidence": 0.8984265437473854,
+        "correct_answer_avg_token_confidence": 0.9170374085185347,
+        "wrong_answer_avg_token_confidence": 0.8680614485944572,
+        "per_class_accuracy": {
+          "female": 0.8690476190476191,
+          "male": 0.30303030303030304
+        },
+        "prediction_distribution": {
+          "female": 119,
+          "male": 31
+        },
+        "confusion_matrix": {
+          "female": {
+            "female": 73,
+            "male": 11
+          },
+          "male": {
+            "female": 46,
+            "male": 20
+          }
+        }
+      },
+      "choice_metrics": {
+        "num_scored": 150,
+        "num_correct": 96,
+        "accuracy": 0.64,
+        "avg_choice_confidence": 0.6020774994200919,
+        "correct_answer_avg_choice_confidence": 0.6221244628947807,
+        "wrong_answer_avg_choice_confidence": 0.5664384532428687,
+        "avg_ground_truth_probability": 0.5542418130852266,
+        "multiclass_brier_score": 0.42209454841159666,
+        "ece_10_bins": 0.0750188208401465,
+        "per_class_accuracy": {
+          "female": 0.9523809523809523,
+          "male": 0.24242424242424243
+        },
+        "prediction_distribution": {
+          "female": 130,
+          "male": 20
+        },
+        "confusion_matrix": {
+          "female": {
+            "female": 80,
+            "male": 4
+          },
+          "male": {
+            "female": 50,
+            "male": 16
+          }
+        }
+      }
+    },
+    "icd": {
+      "num_predictions": 150,
+      "generation_metrics": {
+        "num_scored": 150,
+        "num_correct": 91,
+        "accuracy": 0.6066666666666667,
+        "parse_error_count": 1,
+        "avg_token_confidence": 0.8876335688607454,
+        "correct_answer_avg_token_confidence": 0.9023974486102174,
+        "wrong_answer_avg_token_confidence": 0.8648621611115599,
+        "per_class_accuracy": {
+          "female": 0.8928571428571429,
+          "male": 0.24242424242424243
+        },
+        "prediction_distribution": {
+          "female": 124,
+          "male": 25,
+          "parse error": 1
+        },
+        "confusion_matrix": {
+          "female": {
+            "female": 75,
+            "male": 9
+          },
+          "male": {
+            "female": 49,
+            "male": 16,
+            "parse error": 1
+          }
+        }
+      },
+      "choice_metrics": {
+        "num_scored": 150,
+        "num_correct": 94,
+        "accuracy": 0.6266666666666667,
+        "avg_choice_confidence": 0.5866412430713399,
+        "correct_answer_avg_choice_confidence": 0.6022033811617286,
+        "wrong_answer_avg_choice_confidence": 0.5605190827053297,
+        "avg_ground_truth_probability": 0.5414536613180267,
+        "multiclass_brier_score": 0.43737809068018046,
+        "ece_10_bins": 0.10702095975227446,
+        "per_class_accuracy": {
+          "female": 1.0,
+          "male": 0.15151515151515152
+        },
+        "prediction_distribution": {
+          "female": 140,
+          "male": 10
+        },
+        "confusion_matrix": {
+          "female": {
+            "female": 84
+          },
+          "male": {
+            "female": 56,
+            "male": 10
+          }
+        }
+      }
+    },
+    "m3id": {
+      "num_predictions": 150,
+      "generation_metrics": {
+        "num_scored": 150,
+        "num_correct": 88,
+        "accuracy": 0.5866666666666667,
+        "parse_error_count": 0,
+        "avg_token_confidence": 0.9351464828848837,
+        "correct_answer_avg_token_confidence": 0.9476067007829752,
+        "wrong_answer_avg_token_confidence": 0.9174610123198519,
+        "per_class_accuracy": {
+          "female": 1.0,
+          "male": 0.06060606060606061
+        },
+        "prediction_distribution": {
+          "female": 146,
+          "male": 4
+        },
+        "confusion_matrix": {
+          "female": {
+            "female": 84
+          },
+          "male": {
+            "female": 62,
+            "male": 4
+          }
+        }
+      },
+      "choice_metrics": {
+        "num_scored": 150,
+        "num_correct": 98,
+        "accuracy": 0.6533333333333333,
+        "avg_choice_confidence": 0.5874890104576808,
+        "correct_answer_avg_choice_confidence": 0.601550315234821,
+        "wrong_answer_avg_choice_confidence": 0.5609888591469162,
+        "avg_ground_truth_probability": 0.5452034014491524,
+        "multiclass_brier_score": 0.4312517258108712,
+        "ece_10_bins": 0.07061774563480916,
+        "per_class_accuracy": {
+          "female": 0.9880952380952381,
+          "male": 0.22727272727272727
+        },
+        "prediction_distribution": {
+          "female": 134,
+          "male": 16
+        },
+        "confusion_matrix": {
+          "female": {
+            "female": 83,
+            "male": 1
+          },
+          "male": {
+            "female": 51,
+            "male": 15
+          }
+        }
+      }
+    }
+  },
+  "generation_paired_comparison": {
+    "num_paired_examples": 150,
+    "prediction_changed_count": 29,
+    "prediction_changed_rate": 0.19333333333333333,
+    "both_correct": 76,
+    "baseline_only_correct": 12,
+    "vcd_only_correct": 17,
+    "both_wrong": 45,
+    "net_vcd_correct_gain": 5,
+    "changed_examples": [
+      {
+        "id": "msp60k_gender_12920",
+        "answer": "female",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "msp60k_gender_14923",
+        "answer": "female",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "msp60k_gender_16234",
+        "answer": "female",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "msp60k_gender_1884",
+        "answer": "male",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "msp60k_gender_19014",
+        "answer": "male",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "msp60k_gender_22342",
+        "answer": "male",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "msp60k_gender_25215",
+        "answer": "female",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "msp60k_gender_27228",
+        "answer": "male",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "msp60k_gender_28730",
+        "answer": "male",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "msp60k_gender_29163",
+        "answer": "female",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "msp60k_gender_29411",
+        "answer": "male",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "msp60k_gender_3074",
+        "answer": "male",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "msp60k_gender_30791",
+        "answer": "male",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "msp60k_gender_31642",
+        "answer": "female",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "msp60k_gender_3269",
+        "answer": "male",
+        "baseline_prediction": "male",
+        "vcd_prediction": "female",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "msp60k_gender_39400",
+        "answer": "male",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "msp60k_gender_39626",
+        "answer": "male",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "msp60k_gender_42805",
+        "answer": "female",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "msp60k_gender_44363",
+        "answer": "male",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "msp60k_gender_44752",
+        "answer": "male",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "msp60k_gender_46100",
+        "answer": "male",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "msp60k_gender_46434",
+        "answer": "female",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "msp60k_gender_48672",
+        "answer": "female",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "msp60k_gender_49001",
+        "answer": "male",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "msp60k_gender_51375",
+        "answer": "male",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "msp60k_gender_52040",
+        "answer": "female",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "msp60k_gender_53110",
+        "answer": "female",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "msp60k_gender_59342",
+        "answer": "male",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "msp60k_gender_59874",
+        "answer": "male",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": false,
+        "vcd_correct": true
+      }
+    ]
+  },
+  "choice_paired_comparison": {
+    "num_paired_examples": 150,
+    "prediction_changed_count": 11,
+    "prediction_changed_rate": 0.07333333333333333,
+    "both_correct": 89,
+    "baseline_only_correct": 4,
+    "vcd_only_correct": 7,
+    "both_wrong": 50,
+    "net_vcd_correct_gain": 3,
+    "changed_examples": [
+      {
+        "id": "msp60k_gender_19014",
+        "answer": "male",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "msp60k_gender_20802",
+        "answer": "male",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "msp60k_gender_25215",
+        "answer": "female",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "msp60k_gender_28730",
+        "answer": "male",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "msp60k_gender_29509",
+        "answer": "male",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "msp60k_gender_30347",
+        "answer": "female",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "msp60k_gender_31642",
+        "answer": "female",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "msp60k_gender_38549",
+        "answer": "male",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "msp60k_gender_40649",
+        "answer": "male",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": false,
+        "vcd_correct": true
+      },
+      {
+        "id": "msp60k_gender_43127",
+        "answer": "female",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": true,
+        "vcd_correct": false
+      },
+      {
+        "id": "msp60k_gender_49001",
+        "answer": "male",
+        "baseline_prediction": "female",
+        "vcd_prediction": "male",
+        "baseline_correct": false,
+        "vcd_correct": true
+      }
+    ]
+  }
+}
