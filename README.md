@@ -17,7 +17,7 @@ Hallucination mitigation did not consistently improve prediction accuracy. Howev
 This suggests that methods designed to reduce hallucination can unintentionally strengthen confidence in sensitive-attribute inference, even when predictions do not become more accurate.
 
 <p align="center">
-  <img src="assets/figures/fig3_confidence_change.png" width="900" alt="Confidence changes across experiments">
+  <img src="assets/figures/confidence_changes.png" width="900" alt="Confidence changes across experiments">
 </p>
 
 ## Evaluation Pipeline
@@ -49,7 +49,7 @@ The evaluation reports:
 | Context | MSP60K | Gender | 2 | 600 |
 
 <p align="center">
-  <img src="assets/figures/dataset_overview_collages.png" width="850" alt="Dataset overview">
+  <img src="assets/figures/dataset_overview.png" width="850" alt="Dataset overview">
 </p>
 
 Raw dataset images are not distributed in this repository. Download each dataset from its official source and provide its local image directory when running an experiment.
@@ -70,13 +70,13 @@ Annotation files used by the experiments are provided under `data/`.
 Values are percentages. Accuracy improvements and reductions vary across datasets and decoding methods.
 
 <p align="center">
-  <img src="assets/figures/table1_accuracy.png" width="900" alt="Accuracy results">
+  <img src="assets/figures/accuracy_results.png" width="900" alt="Accuracy results">
 </p>
 
 Calibration also changes inconsistently. Some settings show substantial ECE improvements, while others remain overconfident in specific confidence ranges.
 
 <p align="center">
-  <img src="assets/figures/fig4_reliability_diagrams.png" width="900" alt="Reliability diagrams">
+  <img src="assets/figures/reliability_diagrams.png" width="900" alt="Reliability diagrams">
 </p>
 
 Machine-readable final results are available in:
@@ -99,10 +99,10 @@ vlm-privacy/
 │   ├── final_metrics.csv
 │   └── final_metrics.json
 ├── scripts/
-│   ├── analyze_attribute_results.py
+│   ├── analyze_results.py
 │   ├── build_final_metrics.py
-│   ├── create_utkface_attribute_annotations.py
-│   └── verify_predictions.py
+│   ├── build_utkface_annotations.py
+│   └── validate_predictions.py
 ├── src/
 │   ├── baseline_inference.py
 │   ├── choice_scoring.py
@@ -115,7 +115,7 @@ vlm-privacy/
 ├── tests/
 │   └── test_vcd_core.py
 ├── requirements.txt
-└── run_pilot.py
+└── run_experiment.py
 ```
 
 ## Installation
@@ -141,8 +141,8 @@ llava-hf/llava-1.5-7b-hf
 The following example runs all four decoding methods on UTKFace age annotations:
 
 ```bash
-python run_pilot.py \
-  --annotations data/utkface_3k/annotations_age.json \
+python run_experiment.py \
+  --annotations data/utkface/annotations_age.json \
   --image-dir /path/to/UTKFace/images \
   --results-dir results/utkface_age \
   --methods baseline vcd m3id icd \
