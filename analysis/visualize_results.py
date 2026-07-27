@@ -8,6 +8,11 @@ ROOT = Path(__file__).parent.parent
 OUTPUT_DIR = ROOT / "analysis" / "figures"
 OUTPUT_DIR.mkdir(exist_ok=True)
 
+plt.rcParams.update({
+    "font.family": "Arial",
+    "font.sans-serif": ["Arial", "Helvetica Neue", "Helvetica", "sans-serif"],
+})
+
 
 def load_predictions(*paths):
     all_preds = []
@@ -94,11 +99,11 @@ DATASETS = {
 
 METHOD_LABELS = {"baseline": "Baseline", "vcd": "VCD", "m3id": "M3ID"}
 METHOD_COLORS = {
-    "baseline": "#595959",  # tableau-colorblind10 gray
-    "vcd": "#C85200",       # tableau-colorblind10 orange
-    "m3id": "#006BA4",      # tableau-colorblind10 blue
+    "baseline": "#B0B7C3",
+    "vcd": "#E8895B",
+    "m3id": "#4CB394",
 }
-GAP_COLOR = "#d03b3b"  # status red, CVD-validated against all three method colors
+GAP_COLOR = "#D77878"
 
 # 데이터 수집
 results = {}

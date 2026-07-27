@@ -36,3 +36,27 @@ run_pilot.py.simplified_backup
 *.pt
 *.pth
 venv/
+
+# Repository cleanup
+
+# Python environments and cache
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+
+# macOS
+.DS_Store
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Raw dataset images
+data/**/images/
+archive/**/images/
+analysis/poster_samples/
+analysis/figures/dataset_examples/
+
+# Large or machine-specific experiment outputs
+results/**/pilot_predictions.jsonl
+results/**/run_metadata.json
