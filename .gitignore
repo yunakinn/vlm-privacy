@@ -68,3 +68,6 @@ archive/
 results/*/
 !results/final_metrics.json
 !results/final_metrics.csv
+
+# Local poster and analysis workspace
+analysis/
