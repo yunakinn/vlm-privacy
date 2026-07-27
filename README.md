@@ -72,14 +72,65 @@ The evaluation reports:
 
 ## Evaluation Settings
 
-| Image type | Dataset | Attribute | Classes | Samples |
-|:---:|:---:|:---:|:---:|:---:|
-| Facial | UTKFace | Age | 5 | 3,000 |
-| Facial | UTKFace | Race | 5 | 3,000 |
-| Facial | FairFace | Gender | 2 | 3,000 |
-| Facial | FairFace | Race | 7 | 2,925 |
-| Pedestrian | PA-100K | Age | 3 | 3,000 |
-| Pedestrian | MSP60K | Gender | 2 | 600 |
+<div align="center">
+
+<table>
+  <thead>
+    <tr>
+      <th align="center">Image type</th>
+      <th align="center">Dataset</th>
+      <th align="center">Attribute</th>
+      <th align="center">Classes</th>
+      <th align="center">Samples</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td align="center">Facial</td>
+      <td align="center">UTKFace</td>
+      <td align="center">Age</td>
+      <td align="center">5</td>
+      <td align="center">3,000</td>
+    </tr>
+    <tr>
+      <td align="center">Facial</td>
+      <td align="center">UTKFace</td>
+      <td align="center">Race</td>
+      <td align="center">5</td>
+      <td align="center">3,000</td>
+    </tr>
+    <tr>
+      <td align="center">Facial</td>
+      <td align="center">FairFace</td>
+      <td align="center">Gender</td>
+      <td align="center">2</td>
+      <td align="center">3,000</td>
+    </tr>
+    <tr>
+      <td align="center">Facial</td>
+      <td align="center">FairFace</td>
+      <td align="center">Race</td>
+      <td align="center">7</td>
+      <td align="center">2,925</td>
+    </tr>
+    <tr>
+      <td align="center">Pedestrian</td>
+      <td align="center">PA-100K</td>
+      <td align="center">Age</td>
+      <td align="center">3</td>
+      <td align="center">3,000</td>
+    </tr>
+    <tr>
+      <td align="center">Pedestrian</td>
+      <td align="center">MSP60K</td>
+      <td align="center">Gender</td>
+      <td align="center">2</td>
+      <td align="center">600</td>
+    </tr>
+  </tbody>
+</table>
+
+</div>
 
 <p align="center">
   <img
