@@ -11,6 +11,10 @@ We evaluate **LLaVA-1.5-7B** with four decoding methods:
 
 The experiments cover age, gender, and race inference using facial and pedestrian images.
 
+## Project Context
+
+This work was conducted during the **2026 USTC Future Scientist Student Exchange Program (FUSEP)** at the University of Science and Technology of China.
+
 ## Key Finding
 
 > Hallucination mitigation increased confidence in **17 of 18 comparisons**, while its effects on accuracy and calibration were inconsistent.
@@ -96,12 +100,32 @@ The consolidated results are available in machine-readable formats:
 - [`results/final_metrics.csv`](results/final_metrics.csv)
 - [`results/final_metrics.json`](results/final_metrics.json)
 
+## Research Poster
+
+<p align="center">
+  <a href="assets/poster/research_poster.png">
+    <img
+      src="assets/poster/research_poster.png"
+      width="440"
+      alt="Research poster"
+    >
+  </a>
+</p>
+
+<p align="center">
+  <sub>
+    Research poster prepared for the 2026 USTC Future Scientist Student Exchange Program.
+  </sub>
+</p>
+
 ## Repository Structure
 
 ```text
 vlm-privacy/
 ├── assets/
-│   └── figures/                 # Figures used in this README
+│   ├── figures/                 # Figures used in this README
+│   └── poster/
+│       └── research_poster.png
 ├── data/
 │   ├── fairface/                # Gender and race annotations
 │   ├── msp60k/                  # Gender annotations
