@@ -257,9 +257,17 @@ Useful options:
 
 Run-level prediction files and metadata are stored locally and excluded from Git.
 
+## Testing
+
+Run the VCD core tests with:
+
+```bash
+python -m pytest tests
+```
+
 ## Rebuilding Final Metrics
 
-After completing the expected experiment runs, rebuild the consolidated result files with:
+The repository includes the consolidated final metrics, but run-level prediction files are excluded from Git. To regenerate the metrics from scratch, first complete the expected experiment runs and then execute:
 
 ```bash
 python scripts/build_final_metrics.py
@@ -273,6 +281,16 @@ results/final_metrics.json
 ```
 
 The script uses samples with paired predictions from Baseline, VCD, M3ID, and ICD.
+
+## Data Availability
+
+Raw dataset images are not distributed in this repository. Users must obtain UTKFace, FairFace, PA-100K, and MSP60K from their official sources and comply with each dataset's license and terms of use.
+
+The files under `data/` provide the evaluation annotations used in this study.
+
+## Responsible Use
+
+This repository is intended for research on privacy risks and vision-language model behavior. It should not be used to infer sensitive attributes about individuals for surveillance, profiling, access control, employment, healthcare, or other real-world decision-making.
 
 ## Limitations
 
