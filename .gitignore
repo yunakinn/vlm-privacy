@@ -17,13 +17,11 @@ checkpoints/
 *.safetensors
 
 # Generated experiment results
-results/*
 !results/.gitkeep
 
 # Private/raw images
 data/images/*
 !data/images/.gitkeep
-results*/
 backups/
 run_pilot (*.py
 run_pilot.py.simplified_backup
@@ -63,3 +61,10 @@ results/**/run_metadata.json
 
 # Local experimental archive
 archive/
+
+# Local experiment runs
+
+# Local experiment runs
+results/*/
+!results/final_metrics.json
+!results/final_metrics.csv

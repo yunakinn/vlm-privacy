@@ -40,17 +40,19 @@ DATASETS = {
     "FairFace-Gender": [
         f"results/fairface_gender_chunk{i}/pilot_predictions.jsonl" for i in range(5)
     ],
-    # Final balanced 7-category race set (~1800 examples). Supersedes the
-    # earlier fairface_race_add_* / unreduced chunks, which were an
-    # intermediate attempt at a 3000-example pool that was later abandoned
-    # in favor of this smaller balanced set (see commit "FairFace race
-    # reduced to 1800 (balanced 7 categories)").
+    # Final evaluation set: 2,925 examples with complete predictions
+    # for Baseline, VCD, M3ID, and ICD.
     "FairFace-Race": [
         "results/fairface_race_reduced_chunk0/pilot_predictions.jsonl",
         "results/fairface_race_reduced_chunk1/pilot_predictions.jsonl",
         "results/fairface_race_chunk2_sub0/pilot_predictions.jsonl",
         "results/fairface_race_chunk2_sub1/pilot_predictions.jsonl",
         "results/fairface_race_chunk2_sub2/pilot_predictions.jsonl",
+        "results/fairface_race_add_chunk0/pilot_predictions.jsonl",
+        "results/fairface_race_add_chunk1/pilot_predictions.jsonl",
+        "results/fairface_race_add_chunk2/pilot_predictions.jsonl",
+        "results/fairface_race_add_chunk3a/pilot_predictions.jsonl",
+        "results/fairface_race_add_chunk3b1/pilot_predictions.jsonl",
     ],
     "MSP60K-Gender": [
         f"results/msp60k_gender_chunk{i}/pilot_predictions.jsonl" for i in range(4)
