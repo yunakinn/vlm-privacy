@@ -34,7 +34,7 @@ To reduce answer-position bias, the order of the answer choices is cyclically pe
 <p align="center">
   <img
     src="assets/figures/evaluation_pipeline.jpg"
-    width="520"
+    width="360"
     alt="Evaluation pipeline"
   >
 </p>
