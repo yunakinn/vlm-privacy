@@ -60,3 +60,6 @@ analysis/figures/dataset_examples/
 # Large or machine-specific experiment outputs
 results/**/pilot_predictions.jsonl
 results/**/run_metadata.json
+
+# Local experimental archive
+archive/
