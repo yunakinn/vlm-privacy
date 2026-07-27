@@ -286,3 +286,14 @@ Results may differ for:
 - Indirect private attributes
 - Privacy-related objects
 - Other demographic or contextual attributes
+
+## References
+
+1. Liu et al. **Improved Baselines with Visual Instruction Tuning.** CVPR, 2024.
+2. Leng et al. **Mitigating Object Hallucinations in Large Vision-Language Models through Visual Contrastive Decoding.** CVPR, 2024.
+3. Favero et al. **Multi-Modal Hallucination Control by Visual Information Grounding.** CVPR, 2024.
+4. Wang et al. **Mitigating Hallucinations in Large Vision-Language Models with Instruction Contrastive Decoding.** Findings of ACL, 2024.
+5. Zhang et al. **Age Progression/Regression by Conditional Adversarial Autoencoder.** CVPR, 2017.
+6. Kärkkäinen and Joo. **FairFace: Face Attribute Dataset for Balanced Race, Gender, and Age for Bias Measurement and Mitigation.** WACV, 2021.
+7. Liu et al. **HydraPlus-Net: Attentive Deep Features for Pedestrian Analysis.** ICCV, 2017.
+8. Jin et al. **Pedestrian Attribute Recognition: A New Benchmark Dataset and a Large Language Model Augmented Framework.** AAAI, 2025.
