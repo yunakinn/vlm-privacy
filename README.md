@@ -1,100 +1,112 @@
-# Hallucination Mitigation Methods Can Increase Confidence in Private Attribute Inference
+# Hallucination Mitigation Can Increase Confidence in Private Attribute Inference
 
-This repository evaluates whether hallucination-mitigation decoding methods make vision-language models safer when predicting sensitive human attributes.
+This repository investigates whether hallucination-mitigation decoding methods make vision-language models safer when inferring privacy-sensitive demographic attributes.
 
-Using **LLaVA-1.5-7B**, we compare standard decoding against three mitigation methods:
+We evaluate **LLaVA-1.5-7B** with four decoding methods:
 
+- **Baseline**
 - **VCD** — Visual Contrastive Decoding
 - **M3ID** — Multi-Modal Mutual-Information Decoding
 - **ICD** — Instruction Contrastive Decoding
 
-The experiments cover facial and contextual images across age, race, and gender prediction tasks.
+The experiments cover age, gender, and race inference using facial and pedestrian images.
 
-## Main Finding
+## Key Finding
 
-Hallucination mitigation did not consistently improve prediction accuracy. However, it increased model confidence in **17 of 18** method–dataset comparisons.
+> Hallucination mitigation increased confidence in **17 of 18 comparisons**, while its effects on accuracy and calibration were inconsistent.
 
-This suggests that methods designed to reduce hallucination can unintentionally strengthen confidence in sensitive-attribute inference, even when predictions do not become more accurate.
+The only confidence decrease was observed for ICD on FairFace–Gender. These results suggest that stronger visual grounding can make sensitive-attribute predictions appear more reliable without consistently making them more accurate.
 
 <p align="center">
-  <img src="assets/figures/confidence_changes.png" width="900" alt="Confidence changes across experiments">
+  <img
+    src="assets/figures/confidence_changes.png"
+    width="720"
+    alt="Changes in confidence from the baseline"
+  >
 </p>
 
 ## Evaluation Pipeline
 
-Each sensitive-attribute question is evaluated using cyclic answer-order permutations. Choice probabilities are aggregated to reduce answer-position bias.
+Each image is evaluated using multiple-choice sensitive-attribute questions.
+
+To reduce answer-position bias, the order of the answer choices is cyclically permuted. Choice probabilities are then aggregated across permutations to produce the final prediction and confidence score.
 
 <p align="center">
-  <img src="assets/figures/evaluation_pipeline.jpg" width="900" alt="Evaluation pipeline">
+  <img
+    src="assets/figures/evaluation_pipeline.jpg"
+    width="520"
+    alt="Evaluation pipeline"
+  >
 </p>
 
 The evaluation reports:
 
-- Choice-based accuracy
+- Accuracy
 - Mean choice confidence
-- Expected Calibration Error with 10 bins
+- Expected Calibration Error (ECE)
 - Multiclass Brier score
-- Continuity-corrected McNemar test for paired accuracy changes
-- Wilcoxon signed-rank test for paired confidence changes
+- Continuity-corrected McNemar test for accuracy
+- Wilcoxon signed-rank test for confidence
 
-## Datasets
+## Evaluation Settings
 
-| Image type | Dataset | Attribute | Classes | Evaluation size |
+| Image type | Dataset | Attribute | Classes | Samples |
 |---|---|---:|---:|---:|
 | Facial | UTKFace | Age | 5 | 3,000 |
 | Facial | UTKFace | Race | 5 | 3,000 |
 | Facial | FairFace | Gender | 2 | 3,000 |
 | Facial | FairFace | Race | 7 | 2,925 |
-| Context | PA-100K | Age | 3 | 3,000 |
-| Context | MSP60K | Gender | 2 | 600 |
+| Pedestrian | PA-100K | Age | 3 | 3,000 |
+| Pedestrian | MSP60K | Gender | 2 | 600 |
 
 <p align="center">
-  <img src="assets/figures/dataset_overview.png" width="850" alt="Dataset overview">
+  <img
+    src="assets/figures/dataset_overview.png"
+    width="680"
+    alt="Dataset overview"
+  >
 </p>
 
-Raw dataset images are not distributed in this repository. Download each dataset from its official source and provide its local image directory when running an experiment.
+Raw dataset images are not included in this repository. The evaluation annotation files are provided under `data/`.
 
-Annotation files used by the experiments are provided under `data/`.
+## Results
 
-## Accuracy Results
-
-| Dataset–Attribute | Baseline | VCD | M3ID | ICD |
-|---|---:|---:|---:|---:|
-| UTKFace–Age | 64.97 | 60.60 | 65.67 | 67.93 |
-| PA-100K–Age | 45.13 | 46.03 | 45.67 | 43.70 |
-| UTKFace–Race | 78.53 | 77.70 | 78.40 | 77.50 |
-| FairFace–Race | 54.19 | 57.03 | 54.74 | 54.22 |
-| FairFace–Gender | 94.53 | 94.57 | 94.83 | 94.67 |
-| MSP60K–Gender | 58.50 | 63.67 | 61.00 | 58.17 |
-
-Values are percentages. Accuracy improvements and reductions vary across datasets and decoding methods.
+Accuracy changes varied across datasets and methods. Some methods significantly improved accuracy, while others significantly reduced it.
 
 <p align="center">
-  <img src="assets/figures/accuracy_results.png" width="900" alt="Accuracy results">
+  <img
+    src="assets/figures/accuracy_results.png"
+    width="650"
+    alt="Accuracy results"
+  >
 </p>
 
-Calibration also changes inconsistently. Some settings show substantial ECE improvements, while others remain overconfident in specific confidence ranges.
+Calibration also changed inconsistently. For example, VCD substantially improved calibration on MSP60K–Gender, but calibration did not improve uniformly across all settings.
 
 <p align="center">
-  <img src="assets/figures/reliability_diagrams.png" width="900" alt="Reliability diagrams">
+  <img
+    src="assets/figures/reliability_diagrams.png"
+    width="700"
+    alt="Representative reliability diagrams"
+  >
 </p>
 
-Machine-readable final results are available in:
+The consolidated results are available in machine-readable formats:
 
-- `results/final_metrics.csv`
-- `results/final_metrics.json`
+- [`results/final_metrics.csv`](results/final_metrics.csv)
+- [`results/final_metrics.json`](results/final_metrics.json)
 
 ## Repository Structure
 
 ```text
 vlm-privacy/
 ├── assets/
-│   └── figures/                 # Final figures used in this README
-├── data/                        # Evaluation annotations
-│   ├── fairface/
-│   ├── msp60k/
-│   ├── pa100k/
-│   └── utkface_3k/
+│   └── figures/                 # Figures used in this README
+├── data/
+│   ├── fairface/                # Gender and race annotations
+│   ├── msp60k/                  # Gender annotations
+│   ├── pa100k/                  # Age annotations
+│   └── utkface/                 # Age and race annotations
 ├── results/
 │   ├── final_metrics.csv
 │   └── final_metrics.json
@@ -120,7 +132,7 @@ vlm-privacy/
 
 ## Installation
 
-Create a virtual environment and install the dependencies:
+Create a virtual environment and install the required packages:
 
 ```bash
 python3 -m venv .venv
@@ -138,7 +150,7 @@ llava-hf/llava-1.5-7b-hf
 
 ## Running an Experiment
 
-The following example runs all four decoding methods on UTKFace age annotations:
+The following example evaluates all four methods on UTKFace age inference:
 
 ```bash
 python run_experiment.py \
@@ -149,7 +161,7 @@ python run_experiment.py \
   --resume
 ```
 
-Replace `/path/to/UTKFace/images` with the local dataset directory.
+Replace `/path/to/UTKFace/images` with the local path to the dataset images.
 
 Available methods:
 
@@ -157,7 +169,7 @@ Available methods:
 baseline vcd m3id icd
 ```
 
-Useful options include:
+Useful options:
 
 ```text
 --limit N
@@ -168,41 +180,11 @@ Useful options include:
 --seed 42
 ```
 
-VCD parameters can be configured with:
-
-```text
---vcd-alpha
---vcd-beta
---vcd-noise-step
---vcd-temperature
---vcd-top-p
---vcd-top-k
-```
-
-ICD parameters can be configured with:
-
-```text
---icd-alpha
---icd-beta
---icd-temperature
---icd-top-p
---icd-top-k
---icd-disturbance-instruction
-```
-
-Each run produces local experiment files such as:
-
-```text
-pilot_predictions.jsonl
-pilot_metrics.json
-run_metadata.json
-```
-
-These large run-level files are intentionally excluded from Git.
+Run-level prediction files and metadata are stored locally and excluded from Git.
 
 ## Rebuilding Final Metrics
 
-After generating the expected local prediction folders, rebuild the consolidated result files with:
+After completing the expected experiment runs, rebuild the consolidated result files with:
 
 ```bash
 python scripts/build_final_metrics.py
@@ -215,14 +197,17 @@ results/final_metrics.csv
 results/final_metrics.json
 ```
 
-The consolidation script uses only examples that have paired predictions for Baseline, VCD, M3ID, and ICD.
+The script uses samples with paired predictions from Baseline, VCD, M3ID, and ICD.
 
 ## Limitations
 
-This study evaluates multiple-choice sensitive-attribute inference with one VLM family. Results may differ for open-ended generation, other models, alternative prompts, and other privacy-sensitive attributes.
+This study evaluates one vision-language model family and multiple-choice demographic-attribute inference.
 
-The experiments measure prediction behavior and confidence. They do not represent every form of real-world privacy leakage.
+Results may differ for:
 
-## Citation
-
-Citation information will be added after publication.
+- Other VLMs
+- Open-ended generation
+- Different prompt formats
+- Indirect private attributes
+- Privacy-related objects
+- Other demographic or contextual attributes
