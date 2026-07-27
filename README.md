@@ -73,7 +73,7 @@ The evaluation reports:
 ## Evaluation Settings
 
 | Image type | Dataset | Attribute | Classes | Samples |
-|---|---|---:|---:|---:|
+|:---:|:---:|:---:|:---:|:---:|
 | Facial | UTKFace | Age | 5 | 3,000 |
 | Facial | UTKFace | Race | 5 | 3,000 |
 | Facial | FairFace | Gender | 2 | 3,000 |
