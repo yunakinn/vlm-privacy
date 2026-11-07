@@ -6,9 +6,9 @@
 
 [Research poster](assets/poster/research_poster.png) · [Results CSV](results/final_metrics.csv) · [Results JSON](results/final_metrics.json) · [Run an experiment](#running-an-experiment)
 
-This repository investigates whether hallucination-mitigation decoding methods make vision-language models safer when inferring privacy-sensitive demographic attributes.
+This project examines how hallucination-mitigation decoding methods affect confidence, accuracy, and calibration when vision-language models infer demographic attributes.
 
-We evaluate **LLaVA-1.5-7B** with four decoding methods:
+The study compares four methods using **LLaVA-1.5-7B**:
 
 - **Baseline**
 - **VCD** — Visual Contrastive Decoding
@@ -21,7 +21,7 @@ The experiments cover age, gender, and race inference using facial and pedestria
 
 > Hallucination mitigation increased confidence in **17 of 18 comparisons**, while its effects on accuracy and calibration were inconsistent.
 
-The only confidence decrease was observed for ICD on FairFace–Gender. These results suggest that stronger visual grounding can make sensitive-attribute predictions appear more reliable without consistently making them more accurate.
+The only confidence decrease was observed for ICD on FairFace–Gender. Higher confidence did not reliably indicate more accurate or better-calibrated predictions.
 
 <p align="center">
   <img
@@ -35,17 +35,7 @@ The only confidence decrease was observed for ICD on FairFace–Gender. These re
 
 This work was conducted during the **2026 USTC Future Scientist Student Exchange Program (FUSEP)** at the University of Science and Technology of China.
 
-## At a Glance
-
-| Component | Scope |
-| :--- | :--- |
-| Model | LLaVA-1.5-7B |
-| Comparison | Baseline decoding vs. VCD, M3ID, and ICD |
-| Tasks | Age, gender, and race inference across six dataset–attribute settings |
-| Main observation | Confidence increased in 17 of 18 method–setting comparisons |
-| Interpretation | Confidence gains did not consistently coincide with better accuracy or calibration |
-
-My work focused on comparing decoding methods and evaluating their effects on sensitive-attribute inference. This project evaluates existing methods; it does not introduce a new model or decoding algorithm.
+My work focused on comparing decoding methods and evaluating their effects on sensitive-attribute inference.
 
 ## Evaluation Pipeline
 
@@ -60,6 +50,8 @@ To reduce answer-position bias, the order of the answer choices is cyclically pe
     alt="Evaluation pipeline"
   >
 </p>
+
+The main comparison uses choice-based metrics. Free-form generations are auxiliary outputs: ICD and M3ID apply their contrasts in choice scoring, while their free-form generations use the clean image. M3ID uses a black-image contrast and a fixed step proxy, rather than an exact image-removed autoregressive implementation.
 
 The evaluation reports:
 
@@ -144,7 +136,9 @@ Raw dataset images are not included in this repository. The evaluation annotatio
 
 ## Results
 
-Accuracy changes varied across datasets and methods. Some methods significantly improved accuracy, while others significantly reduced it.
+Accuracy changes varied across datasets and methods, with significant improvements in some settings and declines in others.
+
+The metrics, figures, and poster report the original experiments. They have not been regenerated following the code fixes.
 
 <p align="center">
   <img
@@ -177,6 +171,8 @@ vlm-privacy/
 │   ├── figures/                 # Figures used in this README
 │   └── poster/
 │       └── research_poster.png
+├── configs/
+│   └── final_experiments.json   # Experiment folder mappings
 ├── data/
 │   ├── fairface/                # Gender and race annotations
 │   ├── msp60k/                  # Gender annotations
@@ -200,6 +196,7 @@ vlm-privacy/
 │   ├── vcd_core.py
 │   └── vcd_inference.py
 ├── tests/
+│   ├── test_experiment_regressions.py
 │   └── test_vcd_core.py
 ├── requirements.txt
 └── run_experiment.py
@@ -242,7 +239,7 @@ Replace `/path/to/UTKFace/images` with the local path to the dataset images. The
 
 For a small pilot run, add `--limit 10` and use a separate results directory. A pilot checks the execution path; its metrics are not the full-study results.
 
-Each run writes `pilot_predictions.jsonl`, `pilot_metrics.json`, and `run_metadata.json` under the requested results directory. `--resume` continues a matching run; use `--overwrite` only when you intend to replace that run's output.
+Each run writes `pilot_predictions.jsonl`, `pilot_metrics.json`, and `run_metadata.json`. `--resume` requires matching settings and implementation versions. Use a new results directory after changing implementation versions; `--overwrite` replaces an existing run.
 
 Available methods:
 
@@ -265,7 +262,7 @@ Run-level prediction files and metadata are stored locally and excluded from Git
 
 ## Testing
 
-Run the VCD core tests with:
+Run the tests with:
 
 ```bash
 python -m pytest tests
@@ -273,10 +270,10 @@ python -m pytest tests
 
 ## Rebuilding Final Metrics
 
-The repository includes the consolidated final metrics, but run-level prediction files are excluded from Git. To regenerate the metrics from scratch, first complete the expected experiment runs and then execute:
+Rebuilding requires the original prediction JSONL files, which are not included in this repository. Experiment folder mappings are defined in `configs/final_experiments.json`:
 
 ```bash
-python scripts/build_final_metrics.py
+python scripts/build_final_metrics.py --config configs/final_experiments.json --results-root results
 ```
 
 This updates:
@@ -339,19 +336,3 @@ Results may differ for:
 6. Kärkkäinen and Joo. **FairFace: Face Attribute Dataset for Balanced Race, Gender, and Age for Bias Measurement and Mitigation.** WACV, 2021.
 7. Liu et al. **HydraPlus-Net: Attentive Deep Features for Pedestrian Analysis.** ICCV, 2017.
 8. Jin et al. **Pedestrian Attribute Recognition: A New Benchmark Dataset and a Large Language Model Augmented Framework.** AAAI, 2025.
-
-
-
-## Code Maintenance and Historical Results
-
-Choice-based accuracy, confidence, Brier score, and ECE are the primary comparison metrics. Free-form text is an auxiliary output: ICD and M3ID apply their contrasts in choice scoring, while their free-form generations use the clean image. The M3ID implementation uses a black-image contrast and a fixed step proxy, not an exact image-removed autoregressive reproduction.
-
-The current runner forwards ICD contrast parameters, uses per-example seeded auxiliary sampling, records M3ID parameters, and rejects resumes from earlier implementation revisions. Use a new results directory after changing implementation versions. Historical `results/final_metrics.*`, graphs, and poster are retained unchanged; they are not fresh results from these fixes.
-
-Final experiment folder mappings are in `configs/final_experiments.json`. To use another run layout:
-
-```bash
-python scripts/build_final_metrics.py --config configs/final_experiments.json --results-root results
-```
-
-Rebuilding requires the original prediction JSONL files, which are not included in the public repository. Shared parsing and calibration functions are in `src/evaluate.py`.
