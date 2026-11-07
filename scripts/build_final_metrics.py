@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import argparse
+import sys
 import csv
 import json
 import math
@@ -17,124 +19,21 @@ except ImportError as exc:
     ) from exc
 
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from src.evaluate import (normalize_text, read_jsonl, expected_calibration_error, multiclass_brier_score)
+
 RESULTS_ROOT = Path("results")
 OUTPUT_JSON = RESULTS_ROOT / "final_metrics.json"
 OUTPUT_CSV = RESULTS_ROOT / "final_metrics.csv"
 
 METHODS = ("baseline", "vcd", "m3id", "icd")
 
-EXPERIMENTS = {
-    "utkface_age": {
-        "dataset": "UTKFace",
-        "attribute": "Age",
-        "folders": [
-            "utkface_3k_part1",
-            "m3id_age_part1a",
-            "m3id_age_part1b",
-            "icd_age_chunk0",
-            "icd_age_chunk1",
-            "icd_age_chunk2",
-        ],
-    },
-    "pa100k_age": {
-        "dataset": "PA-100K",
-        "attribute": "Age",
-        "folders": [
-            "pa100k_chunk0",
-            "pa100k_chunk1",
-            "pa100k_chunk2",
-            "pa100k_chunk3",
-            "pa100k_chunk4",
-            "icd_pa100k_chunk0",
-            "icd_pa100k_chunk1",
-            "icd_pa100k_chunk2",
-            "icd_pa100k_chunk3",
-            "icd_pa100k_chunk4",
-        ],
-    },
-    "utkface_race": {
-        "dataset": "UTKFace",
-        "attribute": "Race",
-        "folders": [
-            "utkface_3k_part2",
-            "m3id_race_part2a",
-            "m3id_race_part2b",
-            "icd_race_chunk0",
-            "icd_race_chunk1",
-            "icd_race_chunk2",
-        ],
-    },
-    "fairface_gender": {
-        "dataset": "FairFace",
-        "attribute": "Gender",
-        "folders": [
-            "fairface_gender_chunk0",
-            "fairface_gender_chunk1",
-            "fairface_gender_chunk2",
-            "fairface_gender_chunk3",
-            "fairface_gender_chunk4",
-        ],
-    },
-    "fairface_race": {
-        "dataset": "FairFace",
-        "attribute": "Race",
-        "folders": [
-            "fairface_race_reduced_chunk0",
-            "fairface_race_reduced_chunk1",
-            "fairface_race_chunk2_sub0",
-            "fairface_race_chunk2_sub1",
-            "fairface_race_chunk2_sub2",
-            "fairface_race_add_chunk0",
-            "fairface_race_add_chunk1",
-            "fairface_race_add_chunk2",
-            "fairface_race_add_chunk3a",
-            "fairface_race_add_chunk3b1",
-        ],
-        "note": (
-            "Final FairFace race evaluation using 2,925 fully paired "
-            "examples. The incomplete baseline-only chunk3b2 record "
-            "is excluded."
-        ),
-    },
-    "msp60k_gender": {
-        "dataset": "MSP60K",
-        "attribute": "Gender",
-        "folders": [
-            "msp60k_gender_chunk0",
-            "msp60k_gender_chunk1",
-            "msp60k_gender_chunk2",
-            "msp60k_gender_chunk3",
-        ],
-    },
-}
+DEFAULT_CONFIG = Path(__file__).resolve().parents[1] / "configs/final_experiments.json"
+EXPERIMENTS = json.loads(DEFAULT_CONFIG.read_text(encoding="utf-8"))
 
 
-def normalize_label(value: Any) -> str:
-    """Normalize formatting differences such as hyphens and underscores."""
-    text = str(value or "").strip().lower()
-    text = text.replace("_", " ").replace("-", " ")
-    return " ".join(text.split())
-
-
-def load_jsonl(path: Path) -> list[dict[str, Any]]:
-    records: list[dict[str, Any]] = []
-
-    with path.open(encoding="utf-8") as file:
-        for line_number, line in enumerate(file, start=1):
-            line = line.strip()
-            if not line:
-                continue
-
-            try:
-                record = json.loads(line)
-            except json.JSONDecodeError as exc:
-                raise ValueError(
-                    f"Invalid JSON in {path}:{line_number}"
-                ) from exc
-
-            records.append(record)
-
-    return records
+normalize_label = normalize_text
+load_jsonl = read_jsonl
 
 
 def extract_choice_fields(record: dict[str, Any]) -> dict[str, Any]:
@@ -210,61 +109,19 @@ def load_experiment(
     return by_method
 
 
-def calculate_ece(
-    records: list[dict[str, Any]],
-    num_bins: int = 10,
-) -> float:
-    total = len(records)
-    ece = 0.0
-
-    for index in range(num_bins):
-        lower = index / num_bins
-        upper = (index + 1) / num_bins
-
-        if index == num_bins - 1:
-            selected = [
-                record
-                for record in records
-                if lower <= record["choice_confidence"] <= upper
-            ]
-        else:
-            selected = [
-                record
-                for record in records
-                if lower <= record["choice_confidence"] < upper
-            ]
-
-        if not selected:
-            continue
-
-        bin_accuracy = mean(
-            float(record["correct"]) for record in selected
-        )
-        bin_confidence = mean(
-            record["choice_confidence"] for record in selected
-        )
-
-        ece += (
-            len(selected) / total
-        ) * abs(bin_accuracy - bin_confidence)
-
-    return ece
+def _evaluation_record(record):
+    return {"answer": record["answer"], "choices": record["classes"], "confidence": {
+        "choice_prediction": record["prediction"], "choice_confidence": record["choice_confidence"],
+        "choice_probabilities": record["probabilities"],
+    }}
 
 
-def calculate_brier(records: list[dict[str, Any]]) -> float:
-    scores: list[float] = []
+def calculate_ece(records, num_bins=10):
+    return expected_calibration_error([_evaluation_record(r) for r in records], num_bins)
 
-    for record in records:
-        score = 0.0
 
-        for label in record["classes"]:
-            probability = record["probabilities"].get(label, 0.0)
-            target = 1.0 if label == record["answer"] else 0.0
-            score += (probability - target) ** 2
-
-        scores.append(score)
-
-    return mean(scores)
+def calculate_brier(records):
+    return mean(multiclass_brier_score(_evaluation_record(r)) for r in records)
 
 
 def calculate_method_metrics(
@@ -571,6 +428,15 @@ def print_summary(final: dict[str, Any]) -> None:
 
 
 def main() -> None:
+    global RESULTS_ROOT, OUTPUT_JSON, OUTPUT_CSV, EXPERIMENTS
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--config", type=Path, default=DEFAULT_CONFIG)
+    parser.add_argument("--results-root", type=Path, default=Path("results"))
+    args = parser.parse_args()
+    RESULTS_ROOT = args.results_root
+    OUTPUT_JSON = RESULTS_ROOT / "final_metrics.json"
+    OUTPUT_CSV = RESULTS_ROOT / "final_metrics.csv"
+    EXPERIMENTS = json.loads(args.config.read_text(encoding="utf-8"))
     final = build_results()
 
     with OUTPUT_JSON.open("w", encoding="utf-8") as file:

@@ -1,37 +1,13 @@
 from __future__ import annotations
 
 import argparse
-import json
+import sys
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
+from src.evaluate import read_jsonl, choice_is_correct, is_correct, get_answer_probability
+
 import pandas as pd
-
-
-def read_jsonl(path: Path) -> list[dict]:
-    records = []
-
-    with path.open(
-        "r",
-        encoding="utf-8",
-    ) as file:
-        for line_number, line in enumerate(
-            file,
-            start=1,
-        ):
-            line = line.strip()
-
-            if not line:
-                continue
-
-            try:
-                records.append(json.loads(line))
-            except json.JSONDecodeError as error:
-                raise ValueError(
-                    f"Invalid JSON at line "
-                    f"{line_number}: {path}"
-                ) from error
-
-    return records
 
 
 def flatten_record(record: dict) -> dict:
@@ -47,10 +23,6 @@ def flatten_record(record: dict) -> dict:
         else record.get("prediction")
     )
 
-    choice_probabilities = confidence.get(
-        "choice_probabilities"
-    ) or {}
-
     answer = record.get("answer")
 
     return {
@@ -59,12 +31,12 @@ def flatten_record(record: dict) -> dict:
         "attribute": record.get("attribute"),
         "answer": answer,
         "prediction": prediction,
-        "correct": prediction == answer,
+        "correct": choice_is_correct(record) if choice_prediction is not None else is_correct(record),
         "choice_confidence": confidence.get(
             "choice_confidence"
         ),
         "ground_truth_probability": (
-            choice_probabilities.get(answer)
+            get_answer_probability(record)
         ),
         "avg_token_prob": confidence.get(
             "avg_token_prob"
