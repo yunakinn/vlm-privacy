@@ -1,0 +1,80 @@
+{
+  "utkface_age": {
+    "dataset": "UTKFace",
+    "attribute": "Age",
+    "folders": [
+      "utkface_3k_part1",
+      "m3id_age_part1a",
+      "m3id_age_part1b",
+      "icd_age_chunk0",
+      "icd_age_chunk1",
+      "icd_age_chunk2"
+    ]
+  },
+  "pa100k_age": {
+    "dataset": "PA-100K",
+    "attribute": "Age",
+    "folders": [
+      "pa100k_chunk0",
+      "pa100k_chunk1",
+      "pa100k_chunk2",
+      "pa100k_chunk3",
+      "pa100k_chunk4",
+      "icd_pa100k_chunk0",
+      "icd_pa100k_chunk1",
+      "icd_pa100k_chunk2",
+      "icd_pa100k_chunk3",
+      "icd_pa100k_chunk4"
+    ]
+  },
+  "utkface_race": {
+    "dataset": "UTKFace",
+    "attribute": "Race",
+    "folders": [
+      "utkface_3k_part2",
+      "m3id_race_part2a",
+      "m3id_race_part2b",
+      "icd_race_chunk0",
+      "icd_race_chunk1",
+      "icd_race_chunk2"
+    ]
+  },
+  "fairface_gender": {
+    "dataset": "FairFace",
+    "attribute": "Gender",
+    "folders": [
+      "fairface_gender_chunk0",
+      "fairface_gender_chunk1",
+      "fairface_gender_chunk2",
+      "fairface_gender_chunk3",
+      "fairface_gender_chunk4"
+    ]
+  },
+  "fairface_race": {
+    "dataset": "FairFace",
+    "attribute": "Race",
+    "folders": [
+      "fairface_race_reduced_chunk0",
+      "fairface_race_reduced_chunk1",
+      "fairface_race_chunk2_sub0",
+      "fairface_race_chunk2_sub1",
+      "fairface_race_chunk2_sub2",
+      "fairface_race_add_chunk0",
+      "fairface_race_add_chunk1",
+      "fairface_race_add_chunk2",
+      "fairface_race_add_chunk3a",
+      "fairface_race_add_chunk3b1"
+    ],
+    "note": "Final FairFace race evaluation using 2,925 fully paired examples. The incomplete baseline-only chunk3b2 record is excluded."
+  },
+  "msp60k_gender": {
+    "dataset": "MSP60K",
+    "attribute": "Gender",
+    "folders": [
+      "msp60k_gender_chunk0",
+      "msp60k_gender_chunk1",
+      "msp60k_gender_chunk2",
+      "msp60k_gender_chunk3"
+    ]
+  }
+}
