@@ -1,4 +1,10 @@
-# Hallucination Mitigation Can Increase Confidence in Private Attribute Inference
+# VLM Privacy Evaluation
+
+### Can hallucination mitigation make sensitive-attribute predictions look more reliable?
+
+**Model evaluation · Confidence and calibration · USTC FUSEP 2026**
+
+[Research poster](assets/poster/research_poster.png) · [Results CSV](results/final_metrics.csv) · [Results JSON](results/final_metrics.json) · [Run an experiment](#running-an-experiment)
 
 This repository investigates whether hallucination-mitigation decoding methods make vision-language models safer when inferring privacy-sensitive demographic attributes.
 
@@ -14,6 +20,18 @@ The experiments cover age, gender, and race inference using facial and pedestria
 ## Project Context
 
 This work was conducted during the **2026 USTC Future Scientist Student Exchange Program (FUSEP)** at the University of Science and Technology of China.
+
+## At a Glance
+
+| Component | Scope |
+| :--- | :--- |
+| Model | LLaVA-1.5-7B |
+| Comparison | Baseline decoding vs. VCD, M3ID, and ICD |
+| Tasks | Age, gender, and race inference across six dataset–attribute settings |
+| Main observation | Confidence increased in 17 of 18 method–setting comparisons |
+| Interpretation | Confidence gains did not consistently coincide with better accuracy or calibration |
+
+My work focused on comparing decoding methods and evaluating their effects on sensitive-attribute inference. This project evaluates existing methods; it does not introduce a new model or decoding algorithm.
 
 ## Research Poster
 
@@ -207,6 +225,8 @@ vlm-privacy/
 
 ## Installation
 
+Inference requires access to the LLaVA model weights and sufficient device memory. The repository does not specify a measured minimum VRAM requirement. The example commands assume a Unix-like shell; CUDA availability depends on your PyTorch installation.
+
 Create a virtual environment and install the required packages:
 
 ```bash
@@ -236,7 +256,11 @@ python run_experiment.py \
   --resume
 ```
 
-Replace `/path/to/UTKFace/images` with the local path to the dataset images.
+Replace `/path/to/UTKFace/images` with the local path to the dataset images. The included annotation paths must resolve against that image directory.
+
+For a small pilot run, add `--limit 10` and use a separate results directory. A pilot checks the execution path; its metrics are not the full-study results.
+
+Each run writes `pilot_predictions.jsonl`, `pilot_metrics.json`, and `run_metadata.json` under the requested results directory. `--resume` continues a matching run; use `--overwrite` only when you intend to replace that run's output.
 
 Available methods:
 
@@ -315,3 +339,4 @@ Results may differ for:
 6. Kärkkäinen and Joo. **FairFace: Face Attribute Dataset for Balanced Race, Gender, and Age for Bias Measurement and Mitigation.** WACV, 2021.
 7. Liu et al. **HydraPlus-Net: Attentive Deep Features for Pedestrian Analysis.** ICCV, 2017.
 8. Jin et al. **Pedestrian Attribute Recognition: A New Benchmark Dataset and a Large Language Model Augmented Framework.** AAAI, 2025.
+
