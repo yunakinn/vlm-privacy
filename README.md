@@ -341,3 +341,17 @@ Results may differ for:
 8. Jin et al. **Pedestrian Attribute Recognition: A New Benchmark Dataset and a Large Language Model Augmented Framework.** AAAI, 2025.
 
 
+
+## Code Maintenance and Historical Results
+
+Choice-based accuracy, confidence, Brier score, and ECE are the primary comparison metrics. Free-form text is an auxiliary output: ICD and M3ID apply their contrasts in choice scoring, while their free-form generations use the clean image. The M3ID implementation uses a black-image contrast and a fixed step proxy, not an exact image-removed autoregressive reproduction.
+
+The current runner forwards ICD contrast parameters, uses per-example seeded auxiliary sampling, records M3ID parameters, and rejects resumes from earlier implementation revisions. Use a new results directory after changing implementation versions. Historical `results/final_metrics.*`, graphs, and poster are retained unchanged; they are not fresh results from these fixes.
+
+Final experiment folder mappings are in `configs/final_experiments.json`. To use another run layout:
+
+```bash
+python scripts/build_final_metrics.py --config configs/final_experiments.json --results-root results
+```
+
+Rebuilding requires the original prediction JSONL files, which are not included in the public repository. Shared parsing and calibration functions are in `src/evaluate.py`.

@@ -145,6 +145,10 @@ def parse_args() -> argparse.Namespace:
         default=42,
     )
 
+    parser.add_argument("--m3id-beta", type=float, default=0.1)
+    parser.add_argument("--m3id-gamma", type=float, default=0.02)
+    parser.add_argument("--m3id-step", type=int, default=5)
+
     output_mode = parser.add_mutually_exclusive_group()
     output_mode.add_argument(
         "--resume",
@@ -231,6 +235,7 @@ def build_run_metadata(
     )
 
     return {
+        "implementation_revision": "choice_evaluation_v2",
         "created_at_utc": datetime.now(
             timezone.utc
         ).isoformat(),
@@ -264,12 +269,18 @@ def build_run_metadata(
             "resume_enabled": args.resume,
         },
         "method_implementations": {
+            "m3id": {
+                "name": "m3id_black_image_fixed_step_choice_approximation",
+                "exact_official_reproduction": False,
+                "beta": args.m3id_beta, "gamma": args.m3id_gamma, "step": args.m3id_step,
+                "free_form_generation": "clean_image_generation",
+            },
             "baseline": {
                 "name": "llava_greedy_baseline",
             },
             "vcd": {
                 "name": "official_vcd_algorithm_huggingface_port",
-                "official_vcd_reproduction": True,
+                "official_vcd_reproduction": False,
                 "description": (
                     "Official VCD algorithm port using diffusion "
                     "noise, independent clean/distorted KV caches, "
@@ -289,11 +300,11 @@ def build_run_metadata(
                 "distortion_seed": args.seed,
             },
             "icd": {
-                "name": "icd_algorithm_huggingface_port",
+                "name": "icd_instruction_contrast_choice_port",
                 "exact_official_reproduction": False,
                 "description": (
-                    "Instruction contrastive decoding using normal "
-                    "and disturbance instructions with APC."
+                    "Choice scoring contrasts normal and disturbance instructions with APC; "
+                    "free-form generation uses the clean image."
                 ),
                 "formula": (
                     "(1 + alpha) * normal_logits "
@@ -375,7 +386,10 @@ def validate_resume_metadata(
     vcd = method_implementations.get("vcd", {})
     icd = method_implementations.get("icd", {})
 
+    m3id = method_implementations.get("m3id", {})
     expected = {
+        "implementation_revision": "choice_evaluation_v2",
+        "m3id_beta": args.m3id_beta, "m3id_gamma": args.m3id_gamma, "m3id_step": args.m3id_step,
         "annotations_sha256": sha256_file(args.annotations),
         "methods": set(args.methods),
         "model_id": args.model_id,
@@ -399,6 +413,8 @@ def validate_resume_metadata(
     }
 
     actual = {
+        "implementation_revision": metadata.get("implementation_revision"),
+        "m3id_beta": m3id.get("beta"), "m3id_gamma": m3id.get("gamma"), "m3id_step": m3id.get("step"),
         "annotations_sha256": experiment.get("annotations_sha256"),
         "methods": set(experiment.get("methods", [])),
         "model_id": model.get("model_id"),
@@ -557,7 +573,7 @@ def main() -> None:
         run_vcd_example,
     )
     from src.m3id_inference import (
-        run_m3id_example,
+        M3IDConfig, run_m3id_example,
     )
     from src.icd_inference import (
         ICDConfig,
@@ -571,7 +587,7 @@ def main() -> None:
     )
 
     baseline_config = GenerationConfig(
-        max_new_tokens=args.max_new_tokens,
+        max_new_tokens=args.max_new_tokens, seed=args.seed,
     )
 
     vcd_config = VCDConfig(
@@ -584,6 +600,9 @@ def main() -> None:
         top_k=args.vcd_top_k,
         seed=args.seed,
     )
+
+    m3id_config = M3IDConfig(max_new_tokens=args.max_new_tokens, seed=args.seed,
+                             beta=args.m3id_beta, gamma=args.m3id_gamma, step=args.m3id_step)
 
     icd_config = ICDConfig(
         max_new_tokens=args.max_new_tokens,
@@ -670,7 +689,7 @@ def main() -> None:
                     bundle,
                     example,
                     args.image_dir,
-                    baseline_config,
+                    m3id_config,
                 )
                 append_jsonl(predictions_path, record)
                 records.append(record)
