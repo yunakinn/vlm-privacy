@@ -17,6 +17,20 @@ We evaluate **LLaVA-1.5-7B** with four decoding methods:
 
 The experiments cover age, gender, and race inference using facial and pedestrian images.
 
+## Key Finding
+
+> Hallucination mitigation increased confidence in **17 of 18 comparisons**, while its effects on accuracy and calibration were inconsistent.
+
+The only confidence decrease was observed for ICD on FairFace–Gender. These results suggest that stronger visual grounding can make sensitive-attribute predictions appear more reliable without consistently making them more accurate.
+
+<p align="center">
+  <img
+    src="assets/figures/confidence_changes.png"
+    width="720"
+    alt="Changes in confidence from the baseline"
+  >
+</p>
+
 ## Project Context
 
 This work was conducted during the **2026 USTC Future Scientist Student Exchange Program (FUSEP)** at the University of Science and Technology of China.
@@ -32,38 +46,6 @@ This work was conducted during the **2026 USTC Future Scientist Student Exchange
 | Interpretation | Confidence gains did not consistently coincide with better accuracy or calibration |
 
 My work focused on comparing decoding methods and evaluating their effects on sensitive-attribute inference. This project evaluates existing methods; it does not introduce a new model or decoding algorithm.
-
-## Research Poster
-
-<p align="center">
-  <a href="assets/poster/research_poster.png">
-    <img
-      src="assets/poster/research_poster.png"
-      width="440"
-      alt="Research poster"
-    >
-  </a>
-</p>
-
-<p align="center">
-  <sub>
-    Research poster prepared for the 2026 USTC Future Scientist Student Exchange Program.
-  </sub>
-</p>
-
-## Key Finding
-
-> Hallucination mitigation increased confidence in **17 of 18 comparisons**, while its effects on accuracy and calibration were inconsistent.
-
-The only confidence decrease was observed for ICD on FairFace–Gender. These results suggest that stronger visual grounding can make sensitive-attribute predictions appear more reliable without consistently making them more accurate.
-
-<p align="center">
-  <img
-    src="assets/figures/confidence_changes.png"
-    width="720"
-    alt="Changes in confidence from the baseline"
-  >
-</p>
 
 ## Evaluation Pipeline
 
@@ -329,6 +311,24 @@ Results may differ for:
 - Privacy-related objects
 - Other demographic or contextual attributes
 
+## Research Poster
+
+<p align="center">
+  <a href="assets/poster/research_poster.png">
+    <img
+      src="assets/poster/research_poster.png"
+      width="440"
+      alt="Research poster"
+    >
+  </a>
+</p>
+
+<p align="center">
+  <sub>
+    Research poster prepared for the 2026 USTC Future Scientist Student Exchange Program.
+  </sub>
+</p>
+
 ## References
 
 1. Liu et al. **Improved Baselines with Visual Instruction Tuning.** CVPR, 2024.
@@ -339,4 +339,5 @@ Results may differ for:
 6. Kärkkäinen and Joo. **FairFace: Face Attribute Dataset for Balanced Race, Gender, and Age for Bias Measurement and Mitigation.** WACV, 2021.
 7. Liu et al. **HydraPlus-Net: Attentive Deep Features for Pedestrian Analysis.** ICCV, 2017.
 8. Jin et al. **Pedestrian Attribute Recognition: A New Benchmark Dataset and a Large Language Model Augmented Framework.** AAAI, 2025.
+
 
