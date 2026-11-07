@@ -278,7 +278,7 @@ def run_vcd_example(
         "vcd_seed": example_seed,
         "vcd_implementation":
             "official_vcd_algorithm_huggingface_port",
-        "official_vcd_reproduction": True,
+        "official_vcd_reproduction": False,
     }
 
     choices = example.get("choices")

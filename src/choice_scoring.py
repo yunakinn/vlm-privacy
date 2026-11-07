@@ -170,7 +170,7 @@ def _format_result(
         "choice_scoring_method":
             "balanced_cyclic_permutation_letter_probability",
         "choice_num_permutations": num_permutations,
-        "choice_vcd_implementation": implementation,
+        "choice_implementation": implementation,
     }
 
 
@@ -347,12 +347,12 @@ def score_m3id_choices(
     """
     Score answer letters using M3ID (Multi-Modal Mutual-Information Decoding).
 
-    Reimplementation follows the formula from Favero et al. 2024
-    (arXiv:2403.14003), as verified against the community reimplementation
-    in sangminwoo/RITUAL (official code for RITUAL, arXiv:2405.17821).
+    Choice-scoring approximation inspired by Favero et al. 2024
+    (arXiv:2403.14003) and the community implementation in sangminwoo/RITUAL.
+    This is not an exact reproduction of image-removed autoregressive M3ID.
 
     p_orig: prediction with the image present.
-    p_hal: prediction with the image entirely removed (blank image).
+    p_hal: prediction with a black image; visual tokens remain present.
     gamma_t = exp(-gamma * t); mixing coefficient (1 - gamma_t) / gamma_t.
     Default t=5 is used as a fixed generation-step proxy since
     choice-scoring answers in a single token rather than a full sequence.
@@ -362,6 +362,9 @@ def score_m3id_choices(
 
     probability_sums = {choice: 0.0 for choice in choices}
     permutations = _cyclic_permutations(choices)
+
+    if not 0 < beta <= 1 or gamma < 0 or t < 0:
+        raise ValueError("Require 0 < beta <= 1, gamma >= 0, and t >= 0.")
 
     no_image = Image.new("RGB", image.size, color=(0, 0, 0))
 
@@ -408,7 +411,7 @@ def score_m3id_choices(
         choices=choices,
         probability_sums=probability_sums,
         num_permutations=len(permutations),
-        implementation="m3id_reimplementation_ritual_verified",
+        implementation="m3id_black_image_fixed_step_choice_approximation",
     )
 
 
@@ -428,9 +431,9 @@ def score_icd_choices(
     """
     Score answer letters using ICD (Instruction Contrastive Decoding).
 
-    Reimplementation follows the formula from Wang et al. 2024
-    (arXiv:2403.18715), official repo: github.com/p1k0pan/ICD,
-    verified line-by-line against icd_utils/icd_sample.py.
+    Choice-scoring port inspired by Wang et al. 2024
+    (arXiv:2403.18715), github.com/p1k0pan/ICD.
+    Free-form generation is separate and uses the clean image.
 
     logits_orig: prediction with the standard instruction.
     logits_disturbed: prediction with a disturbance instruction that
@@ -439,6 +442,8 @@ def score_icd_choices(
     if not choices:
         raise ValueError("ICD choice scoring requires choices.")
 
+    if alpha < 0 or not 0 < beta <= 1:
+        raise ValueError("Require alpha >= 0 and 0 < beta <= 1.")
     probability_sums = {choice: 0.0 for choice in choices}
     permutations = _cyclic_permutations(choices)
 
@@ -447,7 +452,7 @@ def score_icd_choices(
             question=question,
             ordered_choices=ordered_choices,
         )
-        disturbed_prompt = disturbance_instruction + "\\n" + prompt
+        disturbed_prompt = disturbance_instruction + "\n" + prompt
 
         inputs_orig = prepare_inputs(bundle=bundle, image=image, prompt=prompt)
         outputs_orig = bundle.model(**inputs_orig)
@@ -480,5 +485,5 @@ def score_icd_choices(
         choices=choices,
         probability_sums=probability_sums,
         num_permutations=len(permutations),
-        implementation="icd_official_port",
+        implementation="icd_instruction_contrast_choice_port",
     )

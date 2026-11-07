@@ -1,12 +1,12 @@
 from __future__ import annotations
 
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 import torch
-from PIL import Image
 
-from .baseline_inference import GenerationConfig, _parse_prediction, _token_confidence
+from .baseline_inference import GenerationConfig, generation_seed, _parse_prediction, _token_confidence
 from .choice_scoring import score_m3id_choices
 from .model_loader import (
     ModelBundle,
@@ -17,12 +17,19 @@ from .model_loader import (
 )
 
 
+@dataclass
+class M3IDConfig(GenerationConfig):
+    beta: float = 0.1
+    gamma: float = 0.02
+    step: int = 5
+
+
 @torch.inference_mode()
 def run_m3id_example(
     bundle: ModelBundle,
     example: dict[str, Any],
     image_dir: str | Path,
-    config: GenerationConfig,
+    config: M3IDConfig,
 ) -> dict[str, Any]:
     image_path = Path(example["image"])
 
@@ -44,16 +51,18 @@ def run_m3id_example(
     # Free-form generation stays on the clean image; M3ID's
     # image-removed contrast is applied only in choice scoring below,
     # matching the same pattern baseline/VCD/ICD use.
-    outputs = bundle.model.generate(
-        **inputs,
-        max_new_tokens=config.max_new_tokens,
-        do_sample=do_sample,
-        temperature=config.temperature if do_sample else None,
-        top_p=config.top_p if do_sample else None,
-        return_dict_in_generate=True,
-        output_scores=True,
-        pad_token_id=bundle.processor.tokenizer.eos_token_id,
-    )
+    with generation_seed(bundle.device, config.seed, example.get("id", str(image_path))):
+        outputs = bundle.model.generate(
+            **inputs,
+            max_new_tokens=config.max_new_tokens,
+            do_sample=do_sample,
+            temperature=config.temperature if do_sample else None,
+            top_p=config.top_p if do_sample else None,
+            top_k=config.top_k if do_sample else None,
+            return_dict_in_generate=True,
+            output_scores=True,
+            pad_token_id=bundle.processor.tokenizer.eos_token_id,
+        )
 
     generated_ids = outputs.sequences[0, prompt_len:]
     raw_output = decode_generated(bundle, generated_ids)
@@ -76,6 +85,9 @@ def run_m3id_example(
                 image=image,
                 question=example["question"],
                 choices=choices,
+                beta=config.beta,
+                gamma=config.gamma,
+                t=config.step,
             )
         )
 
