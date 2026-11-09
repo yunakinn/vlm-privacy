@@ -1,206 +1,163 @@
-# VLM Privacy Evaluation
-
-### Can hallucination mitigation make sensitive-attribute predictions look more reliable?
-
-**Model evaluation · Confidence and calibration · USTC FUSEP 2026**
-
-[Research poster](assets/poster/research_poster.png) · [Results CSV](results/final_metrics.csv) · [Results JSON](results/final_metrics.json) · [Run an experiment](#running-an-experiment)
-
-This project examines how hallucination-mitigation decoding methods affect confidence, accuracy, and calibration when vision-language models infer demographic attributes.
-
-The study compares four methods using **LLaVA-1.5-7B**:
-
-- **Baseline**
-- **VCD** — Visual Contrastive Decoding
-- **M3ID** — Multi-Modal Mutual-Information Decoding
-- **ICD** — Instruction Contrastive Decoding
-
-The experiments cover age, gender, and race inference using facial and pedestrian images.
-
-## Key Finding
-
-> Hallucination mitigation increased confidence in **17 of 18 comparisons**, while its effects on accuracy and calibration were inconsistent.
-
-The only confidence decrease was observed for ICD on FairFace–Gender. Higher confidence did not reliably indicate more accurate or better-calibrated predictions.
-
-<p align="center">
-  <img
-    src="assets/figures/confidence_changes.png"
-    width="720"
-    alt="Changes in confidence from the baseline"
-  >
-</p>
-
-## Project Context
-
-This work was conducted during the **2026 USTC Future Scientist Student Exchange Program (FUSEP)** at the University of Science and Technology of China.
-
-My work focused on comparing decoding methods and evaluating their effects on sensitive-attribute inference.
-
-## Evaluation Pipeline
-
-Each image is evaluated using multiple-choice sensitive-attribute questions.
-
-To reduce answer-position bias, the order of the answer choices is cyclically permuted. Choice probabilities are then aggregated across permutations to produce the final prediction and confidence score.
-
-<p align="center">
-  <img
-    src="assets/figures/evaluation_pipeline.jpg"
-    width="360"
-    alt="Evaluation pipeline"
-  >
-</p>
-
-The main comparison uses choice-based metrics. Free-form generations are auxiliary outputs: ICD and M3ID apply their contrasts in choice scoring, while their free-form generations use the clean image. M3ID uses a black-image contrast and a fixed step proxy, rather than an exact image-removed autoregressive implementation.
-
-The evaluation reports:
-
-- Accuracy
-- Mean choice confidence
-- Expected Calibration Error (ECE)
-- Multiclass Brier score
-- Continuity-corrected McNemar test for accuracy
-- Wilcoxon signed-rank test for confidence
-
-## Evaluation Settings
-
 <div align="center">
 
-<table>
-  <thead>
-    <tr>
-      <th align="center">Image type</th>
-      <th align="center">Dataset</th>
-      <th align="center">Attribute</th>
-      <th align="center">Classes</th>
-      <th align="center">Samples</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td align="center">Facial</td>
-      <td align="center">UTKFace</td>
-      <td align="center">Age</td>
-      <td align="center">5</td>
-      <td align="center">3,000</td>
-    </tr>
-    <tr>
-      <td align="center">Facial</td>
-      <td align="center">UTKFace</td>
-      <td align="center">Race</td>
-      <td align="center">5</td>
-      <td align="center">3,000</td>
-    </tr>
-    <tr>
-      <td align="center">Facial</td>
-      <td align="center">FairFace</td>
-      <td align="center">Gender</td>
-      <td align="center">2</td>
-      <td align="center">3,000</td>
-    </tr>
-    <tr>
-      <td align="center">Facial</td>
-      <td align="center">FairFace</td>
-      <td align="center">Race</td>
-      <td align="center">7</td>
-      <td align="center">2,925</td>
-    </tr>
-    <tr>
-      <td align="center">Pedestrian</td>
-      <td align="center">PA-100K</td>
-      <td align="center">Age</td>
-      <td align="center">3</td>
-      <td align="center">3,000</td>
-    </tr>
-    <tr>
-      <td align="center">Pedestrian</td>
-      <td align="center">MSP60K</td>
-      <td align="center">Gender</td>
-      <td align="center">2</td>
-      <td align="center">600</td>
-    </tr>
-  </tbody>
-</table>
+# VLM Privacy Evaluation
+
+**Can hallucination mitigation make sensitive-attribute predictions look more reliable?**
+
+Model evaluation &nbsp;·&nbsp; Confidence & calibration &nbsp;·&nbsp; USTC FUSEP 2026
+
+[Pipeline](#evaluation-pipeline) · [Results](#reported-results) · [Quick start](#installation) · [Research poster](#research-poster)
 
 </div>
 
-<p align="center">
-  <img
-    src="assets/figures/dataset_overview.png"
-    width="680"
-    alt="Dataset overview"
-  >
-</p>
+---
 
-Raw dataset images are not included in this repository. The evaluation annotation files are provided under `data/`.
+## At a Glance
 
-## Results
+| Backbone | Comparison | Evaluation scope | Main finding |
+| :--- | :--- | :--- | :--- |
+| LLaVA-1.5-7B | Baseline, VCD, M3ID, ICD | 6 dataset–attribute tasks | Confidence ↑ in **17 / 18** comparisons |
 
-Accuracy changes varied across datasets and methods, with significant improvements in some settings and declines in others.
+This project examines how hallucination-mitigation decoding methods affect confidence, accuracy, and calibration when vision-language models infer age, gender, and race from facial and pedestrian images.
 
-The metrics, figures, and poster report the original experiments. They have not been regenerated following the code fixes.
+<a id="key-finding"></a>
 
-<p align="center">
-  <img
-    src="assets/figures/accuracy_results.png"
-    width="650"
-    alt="Accuracy results"
-  >
-</p>
+> **Key finding:** Confidence increased in 17 of 18 comparisons against baseline, while accuracy and calibration changed inconsistently. Higher confidence did not reliably indicate more accurate or better-calibrated predictions.
 
-Calibration also changed inconsistently. For example, VCD substantially improved calibration on MSP60K–Gender, but calibration did not improve uniformly across all settings.
+The only confidence decrease was ICD on FairFace–Gender.
 
-<p align="center">
-  <img
-    src="assets/figures/reliability_diagrams.png"
-    width="700"
-    alt="Representative reliability diagrams"
-  >
-</p>
+**Research context:** Conducted during the 2026 USTC Future Scientist Student Exchange Program (FUSEP) at the University of Science and Technology of China. My work focused on comparing decoding methods and evaluating their effects on sensitive-attribute inference.
 
-The consolidated results are available in machine-readable formats:
+## Evaluation Pipeline
 
-- [`results/final_metrics.csv`](results/final_metrics.csv)
-- [`results/final_metrics.json`](results/final_metrics.json)
+![Evaluation pipeline: image and question, cyclic answer-choice permutations, LLaVA scoring with four decoding methods, probability aggregation, then accuracy, confidence, ECE and Brier evaluation.](assets/readme/pipeline.svg)
 
-## Repository Structure
+Each image is evaluated with multiple-choice questions. Answer choices are cyclically permuted to reduce answer-position bias; probabilities are then averaged across permutations to obtain the final prediction and confidence.
 
-```text
-vlm-privacy/
-├── assets/
-│   ├── figures/                 # Figures used in this README
-│   └── poster/
-│       └── research_poster.png
-├── configs/
-│   └── final_experiments.json   # Experiment folder mappings
-├── data/
-│   ├── fairface/                # Gender and race annotations
-│   ├── msp60k/                  # Gender annotations
-│   ├── pa100k/                  # Age annotations
-│   └── utkface/                 # Age and race annotations
-├── results/
-│   ├── final_metrics.csv
-│   └── final_metrics.json
-├── scripts/
-│   ├── analyze_results.py
-│   ├── build_final_metrics.py
-│   ├── build_utkface_annotations.py
-│   └── validate_predictions.py
-├── src/
-│   ├── baseline_inference.py
-│   ├── choice_scoring.py
-│   ├── evaluate.py
-│   ├── icd_inference.py
-│   ├── m3id_inference.py
-│   ├── model_loader.py
-│   ├── vcd_core.py
-│   └── vcd_inference.py
-├── tests/
-│   ├── test_experiment_regressions.py
-│   └── test_vcd_core.py
-├── requirements.txt
-└── run_experiment.py
-```
+| Method | Full name | Current choice-scoring implementation |
+| :--- | :--- | :--- |
+| Baseline | Standard model scoring | Clean-image logits |
+| VCD | Visual Contrastive Decoding | Clean vs. diffusion-noised image logits |
+| M3ID | Multi-Modal Mutual-Information Decoding | Black-image contrast with a fixed step proxy |
+| ICD | Instruction Contrastive Decoding | Standard vs. disturbed-instruction logits |
+
+**Implementation scope:** The main comparison uses choice-based metrics. Free-form generations are auxiliary outputs; ICD and M3ID use the clean image for those generations. M3ID is an approximation, not an exact image-removed autoregressive implementation. See [choice_scoring.py](src/choice_scoring.py).
+
+## Reported Results
+
+> **Result provenance:** The metrics, figures, and poster describe the original experiments. They have not been regenerated after the code fixes. The tables below are rounded directly from [final_metrics.csv](results/final_metrics.csv).
+
+![Accuracy comparison across six tasks for Baseline, VCD, M3ID and ICD.](assets/readme/performance.svg)
+
+### Accuracy ↑
+
+| Dataset / attribute | Baseline | VCD | M3ID | ICD |
+| :--- | ---: | ---: | ---: | ---: |
+| UTKFace · Age | 64.97% | 60.60% | 65.67% | **67.93%** |
+| UTKFace · Race | **78.53%** | 77.70% | 78.40% | 77.50% |
+| FairFace · Gender | 94.53% | 94.57% | **94.83%** | 94.67% |
+| FairFace · Race | 54.19% | **57.03%** | 54.74% | 54.22% |
+| PA-100K · Age | 45.13% | **46.03%** | 45.67% | 43.70% |
+| MSP60K · Gender | 58.50% | **63.67%** | 61.00% | 58.17% |
+
+Bold indicates the highest reported accuracy within each task; it does not imply a statistically significant difference.
+
+### Confidence and Calibration
+
+| Metric | Interpretation |
+| :--- | :--- |
+| Mean choice confidence | Average probability assigned to the predicted choice; higher is not inherently better |
+| ECE ↓ | Expected Calibration Error with 10 bins; lower indicates better calibration under this metric |
+| Multiclass Brier score ↓ | Squared error of the full probability distribution; lower is better |
+
+<details>
+<summary><strong>Mean choice confidence — all tasks</strong></summary>
+
+| Dataset / attribute | Baseline | VCD | M3ID | ICD |
+| :--- | ---: | ---: | ---: | ---: |
+| UTKFace · Age | 49.75% | 55.85% | 55.02% | 53.40% |
+| UTKFace · Race | 51.71% | 59.63% | 59.20% | 56.88% |
+| FairFace · Gender | 70.53% | 73.44% | 72.26% | 70.08% |
+| FairFace · Race | 52.13% | 65.15% | 62.04% | 60.88% |
+| PA-100K · Age | 44.39% | 48.49% | 45.13% | 45.01% |
+| MSP60K · Gender | 57.75% | 59.21% | 57.96% | 57.88% |
+
+</details>
+
+<details>
+<summary><strong>ECE — all tasks (lower is better)</strong></summary>
+
+| Dataset / attribute | Baseline | VCD | M3ID | ICD |
+| :--- | ---: | ---: | ---: | ---: |
+| UTKFace · Age | 0.1521 | **0.0585** | 0.1109 | 0.1460 |
+| UTKFace · Race | 0.2756 | **0.1837** | 0.1953 | 0.2097 |
+| FairFace · Gender | 0.2400 | **0.2112** | 0.2257 | 0.2458 |
+| FairFace · Race | **0.0581** | 0.0813 | 0.0730 | 0.0665 |
+| PA-100K · Age | 0.0849 | **0.0782** | 0.0929 | 0.1147 |
+| MSP60K · Gender | 0.1222 | **0.0595** | 0.0928 | 0.1255 |
+
+Bold indicates the lowest reported ECE per task.
+
+</details>
+
+<details>
+<summary><strong>Multiclass Brier score — all tasks (lower is better)</strong></summary>
+
+| Dataset / attribute | Baseline | VCD | M3ID | ICD |
+| :--- | ---: | ---: | ---: | ---: |
+| UTKFace · Age | 0.4984 | 0.5124 | 0.4782 | **0.4696** |
+| UTKFace · Race | 0.4114 | 0.3825 | **0.3690** | 0.3911 |
+| FairFace · Gender | 0.2085 | **0.1833** | 0.1899 | 0.2118 |
+| FairFace · Race | 0.5951 | 0.5918 | **0.5915** | 0.5967 |
+| PA-100K · Age | 0.6104 | 0.6064 | **0.6052** | 0.6112 |
+| MSP60K · Gender | 0.4514 | **0.4360** | 0.4458 | 0.4526 |
+
+Bold indicates the lowest reported Brier score per task.
+
+</details>
+
+VCD on MSP60K–Gender illustrates an improvement: accuracy rises from **58.50% to 63.67%** while ECE falls from **0.1222 to 0.0595**. This pattern does not hold uniformly: on FairFace–Race, VCD increases accuracy and confidence while ECE worsens.
+
+The original analysis also reports continuity-corrected McNemar tests for accuracy and Wilcoxon signed-rank tests for confidence. Exact values, baseline deltas, and p-values are available in [CSV](results/final_metrics.csv) and [JSON](results/final_metrics.json).
+
+<details>
+<summary><strong>Original result figures</strong></summary>
+
+**Confidence changes**
+
+![Changes in confidence from baseline](assets/figures/confidence_changes.png)
+
+**Accuracy**
+
+![Original accuracy results](assets/figures/accuracy_results.png)
+
+**Calibration**
+
+![Representative reliability diagrams](assets/figures/reliability_diagrams.png)
+
+</details>
+
+## Evaluation Settings
+
+| Image type | Dataset | Attribute | Classes | Samples |
+| :--- | :--- | :--- | ---: | ---: |
+| Facial | UTKFace | Age | 5 | 3,000 |
+| Facial | UTKFace | Race | 5 | 3,000 |
+| Facial | FairFace | Gender | 2 | 3,000 |
+| Facial | FairFace | Race | 7 | 2,925 |
+| Pedestrian | PA-100K | Age | 3 | 3,000 |
+| Pedestrian | MSP60K | Gender | 2 | 600 |
+
+Raw dataset images are not included. Evaluation annotations are provided under [data/](data/).
+
+<details>
+<summary><strong>Original pipeline and dataset figures</strong></summary>
+
+![Original evaluation pipeline](assets/figures/evaluation_pipeline.jpg)
+
+![Dataset overview](assets/figures/dataset_overview.png)
+
+</details>
 
 ## Installation
 
@@ -270,6 +227,9 @@ python -m pytest tests
 
 ## Rebuilding Final Metrics
 
+<details>
+<summary><strong>Rebuild from original prediction files</strong></summary>
+
 Rebuilding requires the original prediction JSONL files, which are not included in this repository. Experiment folder mappings are defined in `configs/final_experiments.json`:
 
 ```bash
@@ -284,6 +244,52 @@ results/final_metrics.json
 ```
 
 The script uses samples with paired predictions from Baseline, VCD, M3ID, and ICD.
+
+</details>
+
+<details>
+<summary><strong>Repository structure</strong></summary>
+
+## Repository Structure
+
+```text
+vlm-privacy/
+├── assets/
+│   ├── figures/                 # Figures used in this README
+│   └── poster/
+│       └── research_poster.png
+├── configs/
+│   └── final_experiments.json   # Experiment folder mappings
+├── data/
+│   ├── fairface/                # Gender and race annotations
+│   ├── msp60k/                  # Gender annotations
+│   ├── pa100k/                  # Age annotations
+│   └── utkface/                 # Age and race annotations
+├── results/
+│   ├── final_metrics.csv
+│   └── final_metrics.json
+├── scripts/
+│   ├── analyze_results.py
+│   ├── build_final_metrics.py
+│   ├── build_utkface_annotations.py
+│   └── validate_predictions.py
+├── src/
+│   ├── baseline_inference.py
+│   ├── choice_scoring.py
+│   ├── evaluate.py
+│   ├── icd_inference.py
+│   ├── m3id_inference.py
+│   ├── model_loader.py
+│   ├── vcd_core.py
+│   └── vcd_inference.py
+├── tests/
+│   ├── test_experiment_regressions.py
+│   └── test_vcd_core.py
+├── requirements.txt
+└── run_experiment.py
+```
+
+</details>
 
 ## Data Availability
 
@@ -336,3 +342,4 @@ Results may differ for:
 6. Kärkkäinen and Joo. **FairFace: Face Attribute Dataset for Balanced Race, Gender, and Age for Bias Measurement and Mitigation.** WACV, 2021.
 7. Liu et al. **HydraPlus-Net: Attentive Deep Features for Pedestrian Analysis.** ICCV, 2017.
 8. Jin et al. **Pedestrian Attribute Recognition: A New Benchmark Dataset and a Large Language Model Augmented Framework.** AAAI, 2025.
+
