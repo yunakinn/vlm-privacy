@@ -1,16 +1,11 @@
-<div align="center">
-
 # VLM Privacy Evaluation
 
 **Can hallucination mitigation make sensitive-attribute predictions look more reliable?**
 
-Model evaluation &nbsp;·&nbsp; Confidence & calibration &nbsp;·&nbsp; USTC FUSEP 2026
+Model evaluation · Confidence & calibration · USTC FUSEP 2026
 
 [Pipeline](#evaluation-pipeline) · [Results](#reported-results) · [Quick start](#installation) · [Research poster](#research-poster)
 
-</div>
-
----
 
 ## At a Glance
 
@@ -30,7 +25,14 @@ The only confidence decrease was ICD on FairFace–Gender.
 
 ## Evaluation Pipeline
 
-![Evaluation pipeline: image and question, cyclic answer-choice permutations, LLaVA scoring with four decoding methods, probability aggregation, then accuracy, confidence, ECE and Brier evaluation.](assets/readme/pipeline.svg)
+```mermaid
+flowchart TD
+    I["Image + attribute question"] --> Q["Cyclic answer-choice permutations"]
+    Q --> M["LLaVA-1.5-7B · Baseline / VCD / M3ID / ICD"]
+    M --> P["Average choice probabilities"]
+    P --> R["Prediction + confidence"]
+    R --> E["Accuracy · ECE · Brier score"]
+```
 
 Each image is evaluated with multiple-choice questions. Answer choices are cyclically permuted to reduce answer-position bias; probabilities are then averaged across permutations to obtain the final prediction and confidence.
 
@@ -46,8 +48,6 @@ Each image is evaluated with multiple-choice questions. Answer choices are cycli
 ## Reported Results
 
 > **Result provenance:** The metrics, figures, and poster describe the original experiments. They have not been regenerated after the code fixes. The tables below are rounded directly from [final_metrics.csv](results/final_metrics.csv).
-
-![Accuracy comparison across six tasks for Baseline, VCD, M3ID and ICD.](assets/readme/performance.svg)
 
 ### Accuracy ↑
 
@@ -342,4 +342,5 @@ Results may differ for:
 6. Kärkkäinen and Joo. **FairFace: Face Attribute Dataset for Balanced Race, Gender, and Age for Bias Measurement and Mitigation.** WACV, 2021.
 7. Liu et al. **HydraPlus-Net: Attentive Deep Features for Pedestrian Analysis.** ICCV, 2017.
 8. Jin et al. **Pedestrian Attribute Recognition: A New Benchmark Dataset and a Large Language Model Augmented Framework.** AAAI, 2025.
+
 
