@@ -1,6 +1,7 @@
 # CPU regression tests; no model downloads or 4-bit inference required.
 torch
 numpy
+scipy
 Pillow
 tqdm
 transformers==4.53.2
