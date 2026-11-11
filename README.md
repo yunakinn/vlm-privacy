@@ -49,6 +49,19 @@ Each image is evaluated with multiple-choice questions. Answer choices are cycli
 
 > **Result provenance:** The metrics, figures, and poster describe the original experiments. They have not been regenerated after the code fixes. The tables below are rounded directly from [final_metrics.csv](results/final_metrics.csv).
 
+![Accuracy, mean choice confidence, ECE and Brier score across six tasks](assets/figures/generated/metrics_overview.svg)
+
+This overview is generated from the published CSV, not from a new model evaluation. Confidence is not a quality score; aggregate results do not provide uncertainty intervals.
+
+To regenerate the SVG and PNG figures without model weights or dataset images:
+
+```bash
+python -m pip install "matplotlib>=3.7"
+python scripts/plot_final_metrics.py
+```
+
+Use `--input PATH` and `--output-dir PATH` for a different metrics CSV or destination.
+
 ### Accuracy ↑
 
 | Dataset / attribute | Baseline | VCD | M3ID | ICD |
@@ -219,11 +232,14 @@ Run-level prediction files and metadata are stored locally and excluded from Git
 
 ## Testing
 
-Run the tests with:
+CPU regression tests do not require dataset images, model weights, or the optional 4-bit inference dependency:
 
 ```bash
+python -m pip install -r requirements-test.txt
 python -m pytest tests
 ```
+
+[GitHub Actions](https://github.com/yunakinn/vlm-privacy/actions/workflows/tests.yml) runs these tests and rebuilds the result figures on pushes and pull requests. Model downloads are disabled during CI; this verifies code behavior, not the reported model performance.
 
 ## Rebuilding Final Metrics
 

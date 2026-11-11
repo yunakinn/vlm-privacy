@@ -1,0 +1,8 @@
+# CPU regression tests; no model downloads or 4-bit inference required.
+torch
+numpy
+Pillow
+tqdm
+transformers==4.53.2
+pytest
+matplotlib>=3.7
