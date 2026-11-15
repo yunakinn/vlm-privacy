@@ -72,10 +72,30 @@ def main() -> None:
     seen_pairs = set()
 
     for index, record in enumerate(records):
+        if not isinstance(record, dict):
+            errors.append(f"Record {index} is not a JSON object")
+            continue
+
         record_id = record.get("id")
         method = record.get("method")
         attribute = record.get("attribute")
-        confidence = record.get("confidence") or {}
+        if (type(record_id) not in (str, int)
+                or (isinstance(record_id, str) and not record_id.strip())):
+            errors.append(f"Missing or invalid id at record {index}")
+            continue
+        if not isinstance(method, str) or not method.strip():
+            errors.append(f"Missing or invalid method at record {index}: id={record_id}")
+            continue
+        if attribute is not None and not isinstance(attribute, str):
+            errors.append(f"Invalid attribute at record {index}: id={record_id}")
+            continue
+
+        confidence = record.get("confidence")
+        if confidence is None:
+            confidence = {}
+        if not isinstance(confidence, dict):
+            errors.append(f"confidence is not a dict at record {index}: id={record_id}")
+            continue
 
         method_counts[method] += 1
         attribute_counts[attribute] += 1
@@ -94,11 +114,8 @@ def main() -> None:
             record.get("prediction"),
         )
 
-        if prediction in {
-            None,
-            "",
-            "parse_error",
-        }:
+        if (not isinstance(prediction, str)
+                or not prediction.strip() or prediction == "parse_error"):
             errors.append(
                 f"Invalid prediction at record {index}: "
                 f"id={record_id}, method={method}"
@@ -121,12 +138,13 @@ def main() -> None:
             )
 
             if not all(
-                isinstance(value, (int, float))
+                type(value) in (int, float)
+                and 0 <= value <= 1
                 and math.isfinite(value)
                 for value in probability_values
             ):
                 errors.append(
-                    f"NaN or Inf probability: "
+                    f"Invalid probability (expected finite number in [0, 1]): "
                     f"id={record_id}, method={method}"
                 )
                 continue
