@@ -49,6 +49,7 @@ def main() -> None:
         "--expected-methods",
         nargs="+",
         default=None,
+        help="Require these methods for every sample ID (paired comparisons).",
     )
 
     parser.add_argument(
@@ -70,6 +71,7 @@ def main() -> None:
     method_counts = Counter()
     attribute_counts = Counter()
     seen_pairs = set()
+    methods_by_id = {}
 
     for index, record in enumerate(records):
         if not isinstance(record, dict):
@@ -108,6 +110,7 @@ def main() -> None:
             )
 
         seen_pairs.add(pair)
+        methods_by_id.setdefault(record_id, set()).add(method)
 
         prediction = confidence.get(
             "choice_prediction",
@@ -171,6 +174,13 @@ def main() -> None:
                 f"expected={sorted(expected_methods)}, "
                 f"actual={sorted(actual_methods)}"
             )
+
+        for record_id, methods in methods_by_id.items():
+            missing_methods = expected_methods - methods
+            if missing_methods:
+                errors.append(
+                    f"Missing methods for id={record_id}: {sorted(missing_methods)}"
+                )
 
     if args.expected_per_method is not None:
         for method in (

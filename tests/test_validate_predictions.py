@@ -68,7 +68,7 @@ def test_malformed_records_report_validation_errors_instead_of_crashing(tmp_path
 
 def test_valid_boundaries_integer_ids_and_expected_counts(tmp_path):
     rows = [record(id=0, confidence={"choice_prediction": "young", "choice_probabilities": {"young": 1, "old": 0}}),
-            record(method="vcd")]
+            record(id=0, method="vcd")]
     result = validate(tmp_path, rows, "--expected-methods", "baseline", "vcd", "--expected-per-method", "1")
     assert result.returncode == 0, result.stdout + result.stderr
     assert "Validation passed" in result.stdout
@@ -91,3 +91,28 @@ def test_existing_duplicate_method_and_count_checks_are_preserved(tmp_path, case
     result = validate(tmp_path, rows, *options)
     assert result.returncode == 1
     assert "Validation errors:" in result.stdout
+
+
+def test_equal_method_counts_do_not_hide_unpaired_samples(tmp_path):
+    rows = [record(id="a"), record(id="shared"),
+            record(id="shared", method="vcd"), record(id="b", method="vcd")]
+    result = validate(tmp_path, rows, "--expected-methods", "baseline", "vcd",
+                      "--expected-per-method", "2")
+    assert result.returncode == 1
+    assert "Missing methods for id=a: ['vcd']" in result.stdout
+    assert "Missing methods for id=b: ['baseline']" in result.stdout
+    assert "Validation passed" not in result.stdout
+
+
+def test_paired_samples_can_have_different_record_order(tmp_path):
+    rows = [record(id="a"), record(id="b", method="vcd"),
+            record(id="b"), record(id="a", method="vcd")]
+    result = validate(tmp_path, rows, "--expected-methods", "baseline", "vcd",
+                      "--expected-per-method", "2")
+    assert result.returncode == 0, result.stdout + result.stderr
+
+
+def test_count_only_validation_still_supports_unpaired_files(tmp_path):
+    result = validate(tmp_path, [record(id="a"), record(id="b", method="vcd")],
+                      "--expected-per-method", "1")
+    assert result.returncode == 0
