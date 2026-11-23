@@ -360,3 +360,7 @@ Results may differ for:
 8. Jin et al. **Pedestrian Attribute Recognition: A New Benchmark Dataset and a Large Language Model Augmented Framework.** AAAI, 2025.
 
 
+
+## License
+
+The code in this repository is released under the [MIT License](LICENSE). It does not cover the datasets, which keep their own licenses and terms of use.
