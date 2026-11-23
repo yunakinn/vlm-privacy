@@ -56,7 +56,7 @@ This overview is generated from the published CSV, not from a new model evaluati
 To regenerate the SVG and PNG figures without model weights or dataset images:
 
 ```bash
-python -m pip install "matplotlib>=3.7"
+python -m pip install matplotlib==3.10.3
 python scripts/plot_final_metrics.py
 ```
 
