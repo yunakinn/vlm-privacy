@@ -1,5 +1,7 @@
 # VLM Privacy Evaluation
 
+[![Tests](https://github.com/yunakinn/vlm-privacy/actions/workflows/tests.yml/badge.svg?branch=main)](https://github.com/yunakinn/vlm-privacy/actions/workflows/tests.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
 **Can hallucination mitigation make sensitive-attribute predictions look more reliable?**
 
 Model evaluation · Confidence & calibration · USTC FUSEP 2026
